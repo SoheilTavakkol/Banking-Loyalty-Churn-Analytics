@@ -9,6 +9,7 @@ Banks need to identify at-risk customers before they churn and understand what d
 Technology Stack
 ComponentTechnologyDatabaseMicrosoft SQL ServerETLSQL Server Integration Services (SSIS)Data WarehouseSQL Server (Star Schema)OLAPSQL Server Analysis Services (SSAS Tabular)VisualizationPower BI / SSRSVersion ControlGit & GitHub
 
+```
 Banking-Loyalty-Churn-Analytics/
 ├── 01-Requirements/
 │   └── Requirements-Document.md          ✅ Phase 1 Complete
@@ -31,7 +32,7 @@ Banking-Loyalty-Churn-Analytics/
 ├── 06-Test-Scripts/
 │   └── Data-Quality-Tests.sql           ⏳ Coming Soon
 └── README.md
-
+```
 Key Features
 Data Architecture
 
