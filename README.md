@@ -12,25 +12,25 @@ ComponentTechnologyDatabaseMicrosoft SQL ServerETLSQL Server Integration Service
 ```
 Banking-Loyalty-Churn-Analytics/
 ├── 01-Requirements/
-│   └── Requirements-Document.md          ✅ Phase 1 Complete
+│   └── Requirements-Document.md         Phase 1 Complete
 ├── 02-Database-Scripts/
-│   ├── Create-DW-Schema.sql             ⏳ Coming Soon
+│   ├── Create-DW-Schema.sql             Coming Soon
 │   ├── Create-Dimensions.sql
 │   └── Create-Facts.sql
 ├── 03-SSIS-Packages/
-│   ├── Load-Dim-Customer.dtsx           ⏳ Coming Soon
+│   ├── Load-Dim-Customer.dtsx           Coming Soon
 │   ├── Load-Dim-DateTime.dtsx
 │   ├── Load-Dim-Location.dtsx
 │   ├── Load-Dim-Segment.dtsx
 │   └── Load-Fact-Transaction.dtsx
 ├── 04-SSAS-Tabular/
-│   └── Banking-Tabular-Model.bim        ⏳ Coming Soon
+│   └── Banking-Tabular-Model.bim        Coming Soon
 ├── 05-PowerBI-Dashboards/
-│   ├── Executive-Dashboard.pbix         ⏳ Coming Soon
+│   ├── Executive-Dashboard.pbix         Coming Soon
 │   ├── CRM-Dashboard.pbix
 │   └── Analyst-Dashboard.pbix
 ├── 06-Test-Scripts/
-│   └── Data-Quality-Tests.sql           ⏳ Coming Soon
+│   └── Data-Quality-Tests.sql           Coming Soon
 └── README.md
 ```
 Key Features
