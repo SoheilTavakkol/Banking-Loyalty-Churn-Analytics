@@ -147,7 +147,7 @@ _Note: All data is anonymized and used for educational purposes._
 ## How to Use This Repository
 ### Prerequisites
 - SQL Server 2019+ (Developer/Enterprise Edition)
-- Visual Studio for SSIS
+- Visual Studio with SSIS extension
 - Visual Studio with SSAS extension
 - Power BI Desktop
 
