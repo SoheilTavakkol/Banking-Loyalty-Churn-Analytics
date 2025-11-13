@@ -74,12 +74,12 @@ Banking-Loyalty-Churn-Analytics/
  - Technical requirements documentation
 View Requirements Document
 
-### Phase 2: Physical Environment Setup (In Progress)
+### Phase 2: Physical Environment Setup (Completed)
  - Development environment configuration
  - Testing environment setup
  - Production environment planning
 
-### Phase 3: Data Modeling (Upcoming)
+### Phase 3: Data Modeling (In Progress)
  - Detailed dimensional model
  - Star schema implementation
  - SCD Type 2 logic design
@@ -178,4 +178,4 @@ This project was developed as part of a comprehensive BI learning path, demonstr
 ### Last Updated: 
 November 2025
 ### Current Phase: 
-Phase 1 Complete - Requirements Gathering 
+Update README: Phase 2 as complete 
