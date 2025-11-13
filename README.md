@@ -26,7 +26,7 @@ Banking-Loyalty-Churn-Analytics/
 ├── 01-Requirements/
 │   └── Requirements-Document.md         Phase 1 Complete
 ├── 02-Database-Scripts/
-│   ├── Create-DW-Schema.sql             Coming Soon
+│   ├── Create-DW-Schema.sql             Phase 2 Complete
 │   ├── Create-Dimensions.sql
 │   └── Create-Facts.sql
 ├── 03-SSIS-Packages/
