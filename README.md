@@ -23,26 +23,54 @@ Banks need to identify at-risk customers before they churn and understand what d
 ## Repository Structure
 ```
 Banking-Loyalty-Churn-Analytics/
+│
 ├── 01-Requirements/
-│   └── Requirements-Document.md         Phase 1 Complete
+│   └── Requirements-Document.md              ✅ Phase 1
+│
 ├── 02-Database-Scripts/
-│   ├── Create-DW-Schema.sql             Phase 2 Complete
-│   ├── Create-Dimensions.sql
-│   └── Create-Facts.sql
-├── 03-SSIS-Packages/
-│   ├── Load-Dim-Customer.dtsx           Coming Soon
-│   ├── Load-Dim-DateTime.dtsx
-│   ├── Load-Dim-Location.dtsx
-│   ├── Load-Dim-Segment.dtsx
-│   └── Load-Fact-Transaction.dtsx
-├── 04-SSAS-Tabular/
-│   └── Banking-Tabular-Model.bim        Coming Soon
-├── 05-PowerBI-Dashboards/
-│   ├── Executive-Dashboard.pbix         Coming Soon
+│   ├── 01-Create-Database.sql                ✅ Phase 2
+│   ├── 02-Create-Schema.sql                  ✅ Phase 2
+│   ├── 03-Create-Dim-Date.sql                ✅ Phase 2
+│   ├── 04-Populate-Dim-Date.sql              ✅ Phase 2
+│   ├── 05-Create-Dim-Location.sql            ✅ Phase 2
+│   ├── 06-Create-Dim-Customer.sql            ✅ Phase 2
+│   ├── 07-Create-Dim-Segment.sql             ✅ Phase 2
+│   ├── 08-Create-Fact-Transaction.sql        ✅ Phase 2
+│   ├── 09-Create-Fact-CustomerSnapshot.sql   ✅ Phase 2
+│   ├── 10-Create-Source-Database.sql         ✅ Phase 4 (partial)
+│   ├── 11-Data-Profiling.sql                 ✅ Phase 4 (partial)
+│   └── README.md
+│
+├── 03-Data-Modeling/
+│   ├── Data-Model-Design.md                  ✅ Phase 3
+│   ├── ER-Diagram.md                         ✅ Phase 3
+│   ├── Data-Dictionary.md                    ✅ Phase 3
+│   └── README.md
+│
+├── 04-Python-Scripts/
+│   ├── import_to_sql.py                      ✅ Phase 4 (partial)
+│   └── README.md                             ⏳ Coming Soon
+│
+├── 05-SSIS-Packages/                         ⏳ Phase 4 (upcoming)
+│   ├── 00-Master-Package.dtsx
+│   ├── 01-Load-Staging.dtsx
+│   ├── 02-Load-Dim-Location.dtsx
+│   ├── 03-Load-Dim-Customer.dtsx
+│   ├── 04-Load-Fact-Transaction.dtsx
+│   ├── 05-Calculate-CustomerSnapshot.dtsx
+│   └── README.md
+│
+├── 06-SSAS-Tabular/                          ⏳ Phase 5
+│   └── Banking-Tabular-Model.bim
+│
+├── 07-PowerBI-Dashboards/                    ⏳ Phase 6
+│   ├── Executive-Dashboard.pbix
 │   ├── CRM-Dashboard.pbix
 │   └── Analyst-Dashboard.pbix
-├── 06-Test-Scripts/
-│   └── Data-Quality-Tests.sql           Coming Soon
+│
+├── 08-Test-Scripts/                          ⏳ Phase 7
+│   └── Data-Quality-Tests.sql
+│
 └── README.md
 ```
 
