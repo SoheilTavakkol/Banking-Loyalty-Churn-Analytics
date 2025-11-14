@@ -75,9 +75,16 @@ Banking-Loyalty-Churn-Analytics/
 View Requirements Document
 
 ### Phase 2: Physical Environment Setup (Completed)
- - Development environment configuration
- - Testing environment setup
- - Production environment planning
+- Development environment configuration
+- Database and schema creation
+- Dimension tables (4 tables with SCD Type 2)
+- Fact tables (2 tables - Transaction & Snapshot)
+- Indexes, constraints, and relationships
+- Pre-populated reference data
+
+** [View Database Scripts](02-Database-Scripts/)**
+
+*Note: Testing and Production environments will be set up during Phase 8 (Deployment)*
 
 ### Phase 3: Data Modeling (In Progress)
  - Detailed dimensional model
