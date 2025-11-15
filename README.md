@@ -48,7 +48,7 @@ Banking-Loyalty-Churn-Analytics/
 │   └── README.md
 │
 ├── 04-Python-Scripts/
-│   ├── import_to_sql.py                      ✅ Phase 4 (partial)
+│   ├── import_to_sql.py                      ✅ Data Import
 │   └── README.md                             ⏳ Coming Soon
 │
 ├── 05-SSIS-Packages/                         ⏳ Phase 5 (upcoming)
@@ -124,10 +124,17 @@ View Requirements Document
 
 *Comprehensive dimensional model with Mermaid diagrams, business rules, and field specifications*
 
-### Phase 4: ETL Development (Upcoming)
- - SSIS package development
- - Data quality checks
- - Incremental load logic
+### Phase 4: ETL Development (In Progress)
+- [x] Source database setup
+- [x] CSV data import (1M+ records)  
+- [x] Data profiling and quality analysis
+- [ ] Staging layer design
+- [ ] SSIS package development
+- [ ] Data quality validation
+- [ ] SCD Type 2 implementation
+- [ ] Incremental load logic
+
+**Current Focus:** Staging layer and ETL pipeline design
 
 ### Phase 5: OLAP Cube (Upcoming)
  - SSAS Tabular model design
