@@ -51,7 +51,7 @@ Banking-Loyalty-Churn-Analytics/
 │   ├── import_to_sql.py                      ✅ Phase 4 (partial)
 │   └── README.md                             ⏳ Coming Soon
 │
-├── 05-SSIS-Packages/                         ⏳ Phase 4 (upcoming)
+├── 05-SSIS-Packages/                         ⏳ Phase 5 (upcoming)
 │   ├── 00-Master-Package.dtsx
 │   ├── 01-Load-Staging.dtsx
 │   ├── 02-Load-Dim-Location.dtsx
@@ -60,15 +60,15 @@ Banking-Loyalty-Churn-Analytics/
 │   ├── 05-Calculate-CustomerSnapshot.dtsx
 │   └── README.md
 │
-├── 06-SSAS-Tabular/                          ⏳ Phase 5
+├── 06-SSAS-Tabular/                          ⏳ Phase 6
 │   └── Banking-Tabular-Model.bim
 │
-├── 07-PowerBI-Dashboards/                    ⏳ Phase 6
+├── 07-PowerBI-Dashboards/                    ⏳ Phase 7
 │   ├── Executive-Dashboard.pbix
 │   ├── CRM-Dashboard.pbix
 │   └── Analyst-Dashboard.pbix
 │
-├── 08-Test-Scripts/                          ⏳ Phase 7
+├── 08-Test-Scripts/                          ⏳ Phase 8
 │   └── Data-Quality-Tests.sql
 │
 └── README.md
