@@ -1,11 +1,11 @@
 """
 Banking Customer Loyalty & Churn Analytics
-Smart Data Augmentation Script
+Smart Data Augmentation Script - Memory Optimized
 
 Purpose: Extend 18-day transaction dataset to 18 months with realistic customer behaviors
 Author: Soheil Tavakkol
 Date: November 2025
-Version: 1.2 - Fixed all bugs
+Version: 2.0 - Memory optimized for large datasets
 """
 
 import pyodbc
@@ -16,6 +16,7 @@ from dateutil.relativedelta import relativedelta
 import random
 from tqdm import tqdm
 import warnings
+import gc
 
 warnings.filterwarnings('ignore')
 
@@ -26,6 +27,7 @@ warnings.filterwarnings('ignore')
 SERVER = 'localhost'
 DATABASE = 'BankingSource'
 BATCH_SIZE = 10000
+CUSTOMER_BATCH_SIZE = 50000  # Process customers in batches
 
 START_DATE = datetime(2015, 1, 1)
 END_DATE = datetime(2016, 8, 31)
@@ -84,75 +86,56 @@ def load_original_data():
 # Customer Personality Assignment
 # ==========================================
 
-def assign_customer_personalities(customers):
-    """Assign personality type to each customer"""
-    print("\nAssigning customer personalities...")
-    
-    personalities = []
+def assign_personality():
+    """Assign single personality based on distribution"""
+    rand = random.random()
     cumsum = np.cumsum(list(CUSTOMER_PERSONALITIES.values()))
     
-    for _ in tqdm(range(len(customers)), desc="Assigning personalities"):
-        rand = random.random()
-        if rand < cumsum[0]:
-            personalities.append('Champion')
-        elif rand < cumsum[1]:
-            personalities.append('Loyal')
-        elif rand < cumsum[2]:
-            personalities.append('AtRisk')
-        elif rand < cumsum[3]:
-            personalities.append('Churned')
-        else:
-            personalities.append('NewCustomer')
-    
-    return personalities
+    if rand < cumsum[0]:
+        return 'Champion'
+    elif rand < cumsum[1]:
+        return 'Loyal'
+    elif rand < cumsum[2]:
+        return 'AtRisk'
+    elif rand < cumsum[3]:
+        return 'Churned'
+    else:
+        return 'NewCustomer'
 
 # ==========================================
 # Transaction Generation
 # ==========================================
 
-def generate_customer_transactions(customer_data, personality, original_txns):
+def generate_customer_transactions(customer_id, customer_info, personality):
     """Generate transactions for one customer based on personality"""
     
     transactions = []
     current_date = START_DATE
     
-    customer_id = customer_data['CustomerID']
-    dob = customer_data['CustomerDOB']
-    gender = customer_data['CustGender']
-    location = customer_data['CustLocation']
-    
-    avg_amount = original_txns['TransactionAmount'].mean()
-    if pd.isna(avg_amount) or avg_amount == 0:
-        avg_amount = 500.0
-    
-    current_balance = original_txns['CustAccountBalance'].iloc[0]
-    if pd.isna(current_balance) or current_balance == 0:
-        current_balance = 10000.0
+    dob = customer_info['CustomerDOB']
+    gender = customer_info['CustGender']
+    location = customer_info['CustLocation']
+    avg_amount = customer_info['avg_amount']
+    current_balance = customer_info['starting_balance']
     
     # Initialize variables
     base_freq = 10
     churn_month = None
     
-    # Determine behavior based on personality
     if personality == 'Champion':
         base_freq = random.randint(15, 25)
-        
     elif personality == 'Loyal':
         base_freq = random.randint(8, 14)
-        
     elif personality == 'AtRisk':
         base_freq = random.randint(10, 15)
-        
     elif personality == 'Churned':
         base_freq = random.randint(8, 12)
         churn_month = random.randint(6, 12)
-        
     else:  # NewCustomer
         base_freq = random.randint(5, 10)
         start_offset = random.randint(3, 6)
         current_date = END_DATE - relativedelta(months=start_offset)
     
-    # Generate transactions
     month_counter = 0
     transaction_counter = 1
     
@@ -180,8 +163,8 @@ def generate_customer_transactions(customer_data, personality, original_txns):
             if txn_date > END_DATE:
                 break
             
-            amount = round(float(avg_amount) * random.uniform(0.8, 1.2), 2)
-            current_balance = float(current_balance) + amount
+            amount = round(avg_amount * random.uniform(0.8, 1.2), 2)
+            current_balance += amount
             
             txn = {
                 'TransactionID': f'T{customer_id[1:]}_{transaction_counter}',
@@ -207,55 +190,108 @@ def generate_customer_transactions(customer_data, personality, original_txns):
 # ==========================================
 
 def augment_data(df):
-    """Main function to augment data"""
+    """Main function to augment data - Memory optimized"""
     
     print("\n" + "="*60)
-    print("SMART DATA AUGMENTATION")
+    print("SMART DATA AUGMENTATION (MEMORY OPTIMIZED)")
     print("="*60)
     
-    customers = df.groupby('CustomerID').first().reset_index()
-    print(f"\nProcessing {len(customers):,} unique customers")
+    # Prepare customer summary (memory efficient)
+    print("\nPreparing customer data...")
+    customer_summary = df.groupby('CustomerID').agg({
+        'CustomerDOB': 'first',
+        'CustGender': 'first',
+        'CustLocation': 'first',
+        'TransactionAmount': 'mean',
+        'CustAccountBalance': 'first'
+    }).reset_index()
     
-    customers['Personality'] = assign_customer_personalities(customers)
+    customer_summary.columns = ['CustomerID', 'CustomerDOB', 'CustGender', 
+                                 'CustLocation', 'avg_amount', 'starting_balance']
+    
+    # Convert to dict for faster access
+    customer_dict = customer_summary.set_index('CustomerID').to_dict('index')
+    
+    # Clear original dataframe from memory
+    del df
+    gc.collect()
+    
+    print(f"✓ Prepared {len(customer_dict):,} customers")
+    
+    # Assign personalities
+    print("\nAssigning personalities...")
+    personalities = {}
+    personality_counts = {p: 0 for p in CUSTOMER_PERSONALITIES.keys()}
+    
+    for customer_id in tqdm(customer_dict.keys(), desc="Assigning"):
+        p = assign_personality()
+        personalities[customer_id] = p
+        personality_counts[p] += 1
     
     print("\nPersonality Distribution:")
-    for p, count in customers['Personality'].value_counts().items():
-        pct = count / len(customers) * 100
+    for p, count in personality_counts.items():
+        pct = count / len(customer_dict) * 100
         print(f"  {p:15s}: {count:6,} ({pct:5.1f}%)")
     
-    print("\nGenerating transactions...")
-    all_transactions = []
+    # Truncate table before starting
+    print("\nPreparing database...")
+    conn = get_connection()
+    cursor = conn.cursor()
+    cursor.execute("TRUNCATE TABLE dbo.RawTransactions")
+    conn.commit()
+    cursor.close()
+    conn.close()
+    print("✓ Table truncated")
     
-    for idx, row in tqdm(customers.iterrows(), total=len(customers), desc="Processing customers"):
-        original_txns = df[df['CustomerID'] == row['CustomerID']]
-        new_txns = generate_customer_transactions(row, row['Personality'], original_txns)
-        all_transactions.extend(new_txns)
+    # Process in batches
+    customer_ids = list(customer_dict.keys())
+    total_customers = len(customer_ids)
+    total_transactions = 0
     
-    result_df = pd.DataFrame(all_transactions)
+    print(f"\nProcessing {total_customers:,} customers in batches of {CUSTOMER_BATCH_SIZE:,}...")
     
-    print(f"\n✓ Generated {len(result_df):,} transactions")
-    print(f"  Date range: {result_df['TransactionDate'].min()} to {result_df['TransactionDate'].max()}")
+    for batch_start in range(0, total_customers, CUSTOMER_BATCH_SIZE):
+        batch_end = min(batch_start + CUSTOMER_BATCH_SIZE, total_customers)
+        batch_ids = customer_ids[batch_start:batch_end]
+        
+        print(f"\n  Batch {batch_start//CUSTOMER_BATCH_SIZE + 1}: Customers {batch_start:,} to {batch_end:,}")
+        
+        batch_transactions = []
+        
+        for customer_id in tqdm(batch_ids, desc="  Generating"):
+            customer_info = customer_dict[customer_id]
+            personality = personalities[customer_id]
+            
+            txns = generate_customer_transactions(customer_id, customer_info, personality)
+            batch_transactions.extend(txns)
+        
+        # Write batch to database
+        if batch_transactions:
+            batch_df = pd.DataFrame(batch_transactions)
+            write_batch_to_database(batch_df)
+            total_transactions += len(batch_transactions)
+            
+            # Clear batch from memory
+            del batch_transactions
+            del batch_df
+            gc.collect()
+        
+        print(f"  ✓ Batch complete. Total transactions so far: {total_transactions:,}")
     
-    return result_df
+    print(f"\n✓ All batches complete. Total: {total_transactions:,} transactions")
+    return total_transactions
 
 # ==========================================
-# Database Writing
+# Database Writing (Batch)
 # ==========================================
 
-def write_to_database(df):
-    """Write augmented data to SQL Server"""
-    
-    print("\nWriting to SQL Server...")
-    print("⚠️  This will TRUNCATE RawTransactions and insert new data")
+def write_batch_to_database(df):
+    """Write batch to SQL Server (append mode)"""
     
     conn = get_connection()
     cursor = conn.cursor()
     
     try:
-        print("  Truncating table...")
-        cursor.execute("TRUNCATE TABLE dbo.RawTransactions")
-        conn.commit()
-        
         insert_sql = """
         INSERT INTO dbo.RawTransactions 
         (TransactionID, CustomerID, CustomerDOB, CustGender, CustLocation,
@@ -263,18 +299,14 @@ def write_to_database(df):
         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
         """
         
-        total_batches = (len(df) + BATCH_SIZE - 1) // BATCH_SIZE
-        
-        for i in tqdm(range(0, len(df), BATCH_SIZE), total=total_batches, desc="Inserting batches"):
+        for i in range(0, len(df), BATCH_SIZE):
             batch = df.iloc[i:i+BATCH_SIZE]
             values = [tuple(x) for x in batch.values]
             cursor.executemany(insert_sql, values)
             conn.commit()
         
-        print(f"\n✓ Successfully inserted {len(df):,} records")
-        
     except Exception as e:
-        print(f"\n✗ Error: {e}")
+        print(f"\n  ✗ Error writing batch: {e}")
         conn.rollback()
         raise
     
@@ -328,22 +360,7 @@ def verify_output():
 if __name__ == "__main__":
     try:
         print("\n" + "="*60)
-        print("BANKING DATA AUGMENTATION SCRIPT")
+        print("BANKING DATA AUGMENTATION SCRIPT v2.0")
+        print("Memory Optimized Edition")
         print("="*60)
         print(f"Target: Extend 18 days → 18 months")
-        print(f"Period: {START_DATE.strftime('%Y-%m-%d')} to {END_DATE.strftime('%Y-%m-%d')}")
-        print("="*60)
-        
-        original_df = load_original_data()
-        augmented_df = augment_data(original_df)
-        write_to_database(augmented_df)
-        verify_output()
-        
-        print("\n" + "="*60)
-        print("SUCCESS! Ready for ETL processing.")
-        print("="*60 + "\n")
-        
-    except Exception as e:
-        print(f"\n✗ Error occurred: {e}")
-        import traceback
-        traceback.print_exc()
