@@ -364,3 +364,19 @@ if __name__ == "__main__":
         print("Memory Optimized Edition")
         print("="*60)
         print(f"Target: Extend 18 days → 18 months")
+        print(f"Period: {START_DATE.strftime('%Y-%m-%d')} to {END_DATE.strftime('%Y-%m-%d')}")
+        print("="*60)
+        
+        original_df = load_original_data()
+        total_txns = augment_data(original_df)
+        verify_output()
+        
+        print("\n" + "="*60)
+        print("SUCCESS! Ready for ETL processing.")
+        print(f"Generated {total_txns:,} transactions")
+        print("="*60 + "\n")
+        
+    except Exception as e:
+        print(f"\n✗ Error occurred: {e}")
+        import traceback
+        traceback.print_exc()
