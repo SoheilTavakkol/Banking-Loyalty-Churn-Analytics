@@ -5,7 +5,7 @@ Smart Data Augmentation Script
 Purpose: Extend 18-day transaction dataset to 18 months with realistic customer behaviors
 Author: Soheil Tavakkol
 Date: November 2025
-Version: 1.1 - Fixed numeric conversion issues
+Version: 1.2 - Fixed all bugs
 """
 
 import pyodbc
@@ -17,28 +17,25 @@ import random
 from tqdm import tqdm
 import warnings
 
-# Suppress pandas warnings
 warnings.filterwarnings('ignore')
 
 # ==========================================
 # Configuration
 # ==========================================
 
-SERVER = 'localhost'  # Change if needed
+SERVER = 'localhost'
 DATABASE = 'BankingSource'
-BATCH_SIZE = 10000  # Insert records in batches
+BATCH_SIZE = 10000
 
-# Date range for augmentation
 START_DATE = datetime(2015, 1, 1)
 END_DATE = datetime(2016, 8, 31)
 
-# Customer personality distribution
 CUSTOMER_PERSONALITIES = {
-    'Champion': 0.20,      # 20% - High frequency, consistent
-    'Loyal': 0.25,         # 25% - Medium frequency, stable
-    'AtRisk': 0.20,        # 20% - Declining over time
-    'Churned': 0.20,       # 20% - Stop after some months
-    'NewCustomer': 0.15    # 15% - Recent joiners only
+    'Champion': 0.20,
+    'Loyal': 0.25,
+    'AtRisk': 0.20,
+    'Churned': 0.20,
+    'NewCustomer': 0.15
 }
 
 # ==========================================
@@ -66,27 +63,17 @@ def load_original_data():
     conn = get_connection()
     query = """
     SELECT 
-        TransactionID,
-        CustomerID,
-        CustomerDOB,
-        CustGender,
-        CustLocation,
-        CustAccountBalance,
-        TransactionDate,
-        TransactionTime,
-        TransactionAmount
+        TransactionID, CustomerID, CustomerDOB, CustGender, CustLocation,
+        CustAccountBalance, TransactionDate, TransactionTime, TransactionAmount
     FROM dbo.RawTransactions
     """
     
     df = pd.read_sql(query, conn)
     conn.close()
     
-    # Convert numeric columns properly
     print("  Converting data types...")
     df['TransactionAmount'] = pd.to_numeric(df['TransactionAmount'], errors='coerce')
     df['CustAccountBalance'] = pd.to_numeric(df['CustAccountBalance'], errors='coerce')
-    
-    # Fill NaN values with defaults
     df['TransactionAmount'].fillna(100.0, inplace=True)
     df['CustAccountBalance'].fillna(10000.0, inplace=True)
     
@@ -129,85 +116,73 @@ def generate_customer_transactions(customer_data, personality, original_txns):
     transactions = []
     current_date = START_DATE
     
-    # Customer info (same for all transactions)
     customer_id = customer_data['CustomerID']
     dob = customer_data['CustomerDOB']
     gender = customer_data['CustGender']
     location = customer_data['CustLocation']
     
-    # Get average transaction amount (now safely numeric)
     avg_amount = original_txns['TransactionAmount'].mean()
     if pd.isna(avg_amount) or avg_amount == 0:
-        avg_amount = 500.0  # Default amount
+        avg_amount = 500.0
     
-    # Get starting balance (now safely numeric)
     current_balance = original_txns['CustAccountBalance'].iloc[0]
     if pd.isna(current_balance) or current_balance == 0:
-        current_balance = 10000.0  # Default starting balance
+        current_balance = 10000.0
     
-    # Determine transaction frequency based on personality
+    # Initialize variables
+    base_freq = 10
+    churn_month = None
+    
+    # Determine behavior based on personality
     if personality == 'Champion':
-        base_freq = random.randint(15, 25)  # 15-25 txns/month
-        churn_month = None  # Never churns
+        base_freq = random.randint(15, 25)
         
     elif personality == 'Loyal':
-        base_freq = random.randint(8, 14)   # 8-14 txns/month
-        churn_month = None  # Never churns
+        base_freq = random.randint(8, 14)
         
     elif personality == 'AtRisk':
-        base_freq = random.randint(10, 15)  # Starts 10-15
-        churn_month = None  # Declines but doesn't fully churn
+        base_freq = random.randint(10, 15)
         
     elif personality == 'Churned':
-        base_freq = random.randint(8, 12)   # 8-12 initially
-        churn_month = random.randint(6, 12)  # Churns after 6-12 months
+        base_freq = random.randint(8, 12)
+        churn_month = random.randint(6, 12)
         
     else:  # NewCustomer
-        base_freq = random.randint(5, 10)   # 5-10 txns/month
-        # Only appears in last 3-6 months
+        base_freq = random.randint(5, 10)
         start_offset = random.randint(3, 6)
         current_date = END_DATE - relativedelta(months=start_offset)
     
-    # Generate transactions month by month
+    # Generate transactions
     month_counter = 0
     transaction_counter = 1
     
     while current_date <= END_DATE:
         month_counter += 1
         
-        # Check if customer has churned
         if churn_month and month_counter > churn_month:
             break
         
-        # Calculate frequency for this month
         if personality == 'AtRisk':
-            # Gradual decline: reduce by 10% each month
             freq = max(3, int(base_freq * (0.9 ** (month_counter - 1))))
         else:
-            # Add some randomness (±20%)
             freq = max(1, int(base_freq * random.uniform(0.8, 1.2)))
         
-        # Generate transactions for this month
         month_end = min(current_date + relativedelta(months=1) - timedelta(days=1), END_DATE)
         
         for _ in range(freq):
-            # Random date within the month
             days_in_period = (month_end - current_date).days + 1
             if days_in_period <= 0:
                 break
+                
             random_day = random.randint(0, days_in_period - 1)
             txn_date = current_date + timedelta(days=random_day)
             
             if txn_date > END_DATE:
                 break
             
-            # Generate transaction amount (±20% variation)
             amount = round(float(avg_amount) * random.uniform(0.8, 1.2), 2)
-            
-            # Update balance
             current_balance = float(current_balance) + amount
             
-            # Generate transaction
             txn = {
                 'TransactionID': f'T{customer_id[1:]}_{transaction_counter}',
                 'CustomerID': customer_id,
@@ -223,7 +198,6 @@ def generate_customer_transactions(customer_data, personality, original_txns):
             transactions.append(txn)
             transaction_counter += 1
         
-        # Move to next month
         current_date += relativedelta(months=1)
     
     return transactions
@@ -239,32 +213,24 @@ def augment_data(df):
     print("SMART DATA AUGMENTATION")
     print("="*60)
     
-    # Get unique customers
     customers = df.groupby('CustomerID').first().reset_index()
     print(f"\nProcessing {len(customers):,} unique customers")
     
-    # Assign personalities
     customers['Personality'] = assign_customer_personalities(customers)
     
-    # Show personality distribution
     print("\nPersonality Distribution:")
     for p, count in customers['Personality'].value_counts().items():
         pct = count / len(customers) * 100
         print(f"  {p:15s}: {count:6,} ({pct:5.1f}%)")
     
-    # Generate new transactions
     print("\nGenerating transactions...")
     all_transactions = []
     
     for idx, row in tqdm(customers.iterrows(), total=len(customers), desc="Processing customers"):
-        # Get original transactions for this customer
         original_txns = df[df['CustomerID'] == row['CustomerID']]
-        
-        # Generate new transactions
         new_txns = generate_customer_transactions(row, row['Personality'], original_txns)
         all_transactions.extend(new_txns)
     
-    # Convert to DataFrame
     result_df = pd.DataFrame(all_transactions)
     
     print(f"\n✓ Generated {len(result_df):,} transactions")
@@ -286,12 +252,10 @@ def write_to_database(df):
     cursor = conn.cursor()
     
     try:
-        # Truncate existing data
         print("  Truncating table...")
         cursor.execute("TRUNCATE TABLE dbo.RawTransactions")
         conn.commit()
         
-        # Prepare insert statement
         insert_sql = """
         INSERT INTO dbo.RawTransactions 
         (TransactionID, CustomerID, CustomerDOB, CustGender, CustLocation,
@@ -299,16 +263,11 @@ def write_to_database(df):
         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
         """
         
-        # Insert in batches
         total_batches = (len(df) + BATCH_SIZE - 1) // BATCH_SIZE
         
         for i in tqdm(range(0, len(df), BATCH_SIZE), total=total_batches, desc="Inserting batches"):
             batch = df.iloc[i:i+BATCH_SIZE]
-            
-            # Convert DataFrame rows to tuples
             values = [tuple(x) for x in batch.values]
-            
-            # Execute batch insert
             cursor.executemany(insert_sql, values)
             conn.commit()
         
@@ -355,7 +314,6 @@ def verify_output():
     print(f"  Unique Customers: {result['UniqueCustomers'][0]:,}")
     print(f"  Average Transaction: ${result['AvgAmount'][0]:,.2f}")
     
-    # Calculate months covered
     min_date = pd.to_datetime(result['MinDate'][0])
     max_date = pd.to_datetime(result['MaxDate'][0])
     months = (max_date.year - min_date.year) * 12 + (max_date.month - min_date.month) + 1
@@ -376,16 +334,9 @@ if __name__ == "__main__":
         print(f"Period: {START_DATE.strftime('%Y-%m-%d')} to {END_DATE.strftime('%Y-%m-%d')}")
         print("="*60)
         
-        # Step 1: Load original data
         original_df = load_original_data()
-        
-        # Step 2: Augment data
         augmented_df = augment_data(original_df)
-        
-        # Step 3: Write to database
         write_to_database(augmented_df)
-        
-        # Step 4: Verify
         verify_output()
         
         print("\n" + "="*60)
