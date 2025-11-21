@@ -5,6 +5,7 @@ Smart Data Augmentation Script
 Purpose: Extend 18-day transaction dataset to 18 months with realistic customer behaviors
 Author: Soheil Tavakkol
 Date: November 2025
+Version: 1.1 - Fixed numeric conversion issues
 """
 
 import pyodbc
@@ -14,6 +15,10 @@ from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
 import random
 from tqdm import tqdm
+import warnings
+
+# Suppress pandas warnings
+warnings.filterwarnings('ignore')
 
 # ==========================================
 # Configuration
@@ -76,6 +81,15 @@ def load_original_data():
     df = pd.read_sql(query, conn)
     conn.close()
     
+    # Convert numeric columns properly
+    print("  Converting data types...")
+    df['TransactionAmount'] = pd.to_numeric(df['TransactionAmount'], errors='coerce')
+    df['CustAccountBalance'] = pd.to_numeric(df['CustAccountBalance'], errors='coerce')
+    
+    # Fill NaN values with defaults
+    df['TransactionAmount'].fillna(100.0, inplace=True)
+    df['CustAccountBalance'].fillna(10000.0, inplace=True)
+    
     print(f"✓ Loaded {len(df):,} transactions for {df['CustomerID'].nunique():,} customers")
     return df
 
@@ -121,9 +135,15 @@ def generate_customer_transactions(customer_data, personality, original_txns):
     gender = customer_data['CustGender']
     location = customer_data['CustLocation']
     
-    # Get average transaction amount from original data
+    # Get average transaction amount (now safely numeric)
     avg_amount = original_txns['TransactionAmount'].mean()
-    current_balance = float(original_txns['CustAccountBalance'].iloc[0])
+    if pd.isna(avg_amount) or avg_amount == 0:
+        avg_amount = 500.0  # Default amount
+    
+    # Get starting balance (now safely numeric)
+    current_balance = original_txns['CustAccountBalance'].iloc[0]
+    if pd.isna(current_balance) or current_balance == 0:
+        current_balance = 10000.0  # Default starting balance
     
     # Determine transaction frequency based on personality
     if personality == 'Champion':
@@ -173,6 +193,8 @@ def generate_customer_transactions(customer_data, personality, original_txns):
         for _ in range(freq):
             # Random date within the month
             days_in_period = (month_end - current_date).days + 1
+            if days_in_period <= 0:
+                break
             random_day = random.randint(0, days_in_period - 1)
             txn_date = current_date + timedelta(days=random_day)
             
@@ -180,10 +202,10 @@ def generate_customer_transactions(customer_data, personality, original_txns):
                 break
             
             # Generate transaction amount (±20% variation)
-            amount = round(avg_amount * random.uniform(0.8, 1.2), 2)
+            amount = round(float(avg_amount) * random.uniform(0.8, 1.2), 2)
             
             # Update balance
-            current_balance += amount
+            current_balance = float(current_balance) + amount
             
             # Generate transaction
             txn = {
