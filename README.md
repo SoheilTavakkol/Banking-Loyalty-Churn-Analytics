@@ -66,8 +66,8 @@ Banking-Loyalty-Churn-Analytics/
 ├── 05-SSIS-Packages/                         🔄 Phase 5 (In Progress)
 │   ├── BankingETL/
 │   │   ├── Package 1 - Load Staging.dtsx     ✅ COMPLETED
-│   │   ├── Package 2 - Load Dim Location     ⏳ Next
-│   │   ├── Package 3 - Load Dim Customer     ⏳ SCD Type 2
+│   │   ├── Package 2 - Load Dim Location     ✅ COMPLETED
+│   │   ├── Package 3 - Load Dim Customer     ⏳ SCD Type 2 (In Progress)
 │   │   ├── Package 4 - Load Fact Trans       ⏳ Upcoming
 │   │   └── Package 5 - CustomerSnapshot      ⏳ Upcoming
 │   └── README.md
