@@ -150,35 +150,73 @@
 **Schema:** DW  
 **Purpose:** Geographic location reference  
 **Type:** Standard dimension  
-**Rows:** ~500  
+**Rows:** 9,021 (loaded)  
 **Grain:** One row per unique location  
-**SCD Type:** Type 1 (Overwrite)
+**SCD Type:** Type 1 (Overwrite)  
+**Status:** ✅ Loaded via Package 2
 
 #### Columns
 
 | Column Name | Data Type | Nullable | Default | Description | Sample Values |
 |-------------|-----------|----------|---------|-------------|---------------|
-| **LocationKey** | INT | No | Identity | Primary key (surrogate) | 1, 2, 500 |
-| LocationCode | VARCHAR(50) | No | - | Normalized location code (unique) | "MUMBAI", "NAVI_MUMBAI" |
+| **LocationKey** | INT | No | Identity | Primary key (surrogate) | 1, 2, 9021 |
+| LocationCode | NVARCHAR(100) | No | - | Normalized location code (unique, BK) | "MUMBAI", "NAVI_MUMBAI" |
 | LocationName | NVARCHAR(100) | No | - | Full location name | "MUMBAI", "NAVI MUMBAI" |
-| City | NVARCHAR(50) | Yes | NULL | Parsed city name | "Mumbai", "Delhi" |
-| State | NVARCHAR(50) | Yes | NULL | State/province name | "Maharashtra", "Delhi" |
+| City | NVARCHAR(100) | Yes | NULL | City name (same as LocationName) | "MUMBAI", "DELHI" |
+| State | NVARCHAR(100) | Yes | NULL | State/province name | "Maharashtra", "Delhi", "Unknown" |
 | Country | NVARCHAR(50) | No | 'India' | Country name | "India" |
-| Region | NVARCHAR(50) | Yes | NULL | Geographic region | "West", "North", "South" |
-| Latitude | DECIMAL(10,7) | Yes | NULL | Geographic latitude (future use) | 19.0760, 28.7041 |
-| Longitude | DECIMAL(10,7) | Yes | NULL | Geographic longitude (future use) | 72.8777, 77.1025 |
-| LocationType | VARCHAR(20) | Yes | NULL | Classification | "Urban", "Rural", "Metro" |
-| CreatedDate | DATETIME | No | GETDATE() | Record creation timestamp | 2025-11-13 11:00:00 |
+| Region | NVARCHAR(50) | Yes | NULL | Geographic region | "West", "North", "South", "Unknown" |
+| Latitude | DECIMAL(10,7) | Yes | NULL | Geographic latitude (future use) | NULL |
+| Longitude | DECIMAL(10,7) | Yes | NULL | Geographic longitude (future use) | NULL |
+| LocationType | NVARCHAR(50) | Yes | NULL | Classification | "City" |
+| CreatedDate | DATETIME | No | GETDATE() | Record creation timestamp | 2025-11-29 10:00:00 |
 | ModifiedDate | DATETIME | Yes | NULL | Record last modified timestamp | NULL |
 
+#### Data Enrichment Strategy
+
+**Reference Table:** ETL.City_Lookup (23 major Indian cities)
+
+**Enrichment Results:**
+- **9,021 total locations** loaded
+- **23 locations (0.3%)** enriched with State/Region from City_Lookup
+- **8,998 locations (99.7%)** marked as State="Unknown", Region="Unknown"
+
+**Major Cities Enriched:**
+- Mumbai, Delhi, Bangalore, Pune, Chennai, Hyderabad, Kolkata
+- Ahmedabad, Jaipur, Lucknow, Kanpur, Nagpur, Indore, Thane
+- Bhopal, Visakhapatnam, Patna, Vadodara, Ghaziabad, Faridabad
+- Rajamandry, Mohali
+
+**Business Logic:**
+- LocationCode: `UPPER(REPLACE(LocationName, ' ', '_'))`
+- State/Region: Lookup from ETL.City_Lookup, else "Unknown"
+- Country: "India" for all records
+- LocationType: "City" for all records
+- Latitude/Longitude: NULL (can be enriched in future phases)
+
 #### Business Rules
-- **LocationCode:** UPPER(REPLACE(LocationName, ' ', '_'))
-- **Country:** Defaults to "India" (can be updated for international expansion)
+- **LocationCode:** Business Key - `UPPER(REPLACE(LocationName, ' ', '_'))`
+- **Country:** Defaults to "India" (expandable for international)
+- **State/Region "Unknown":** Indicates location not in reference table (can be enriched later)
+- **80/20 Rule Applied:** Focus on major cities first, mark rest for future enrichment
 
 #### Indexes
 - Clustered: LocationKey (PK)
-- Non-Clustered: LocationCode, City, State
+- Non-Clustered: LocationCode (Unique)
+- Non-Clustered: State, Region
 
+#### Load History
+- **Package 2:** Initial load of 9,021 locations (Nov 2025)
+- **Runtime:** ~30 seconds
+- **Source:** BankingStaging.dbo.Stg_Location
+
+---
+
+**ETL Notes:**
+- Loaded via Package 2 - Load Dim_Location
+- Unicode support (NVARCHAR) throughout
+- Lookup transformation with "Ignore failure" for unmatched locations
+- Explicit casting in SSIS: `(DT_WSTR,length)Expression`
 ---
 
 ### Dim_Segment
@@ -465,4 +503,5 @@ BankingDW.DW.Fact_CustomerSnapshot (aggregation)
 
 **Document Version:** 1.0  
 **Maintained By:** Data Team  
+
 **Review Frequency:** Quarterly or after schema changes
