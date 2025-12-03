@@ -67,7 +67,7 @@ Banking-Loyalty-Churn-Analytics/
 │   ├── BankingETL/
 │   │   ├── Package 1 - Load Staging.dtsx     ✅ COMPLETED
 │   │   ├── Package 2 - Load Dim Location     ✅ COMPLETED
-│   │   ├── Package 3 - Load Dim Customer     ⏳ SCD Type 2 (In Progress)
+│   │   ├── Package 3 - Load Dim Customer     ✅ COMPLETED
 │   │   ├── Package 4 - Load Fact Trans       ⏳ Upcoming
 │   │   └── Package 5 - CustomerSnapshot      ⏳ Upcoming
 │   └── README.md
@@ -397,6 +397,14 @@ Created separate `BankingStaging` database (Enterprise best practice):
 - Throughput: ~5.4 million records/minute
 - Parallel execution: 3 simultaneous data flows
 
+**Data Loaded:**
+- Dim_Date: 5,844 rows ✅
+- Dim_Segment: 7 rows ✅
+- Dim_Location: 9,021 rows ✅
+- Dim_Customer: 884,265 rows ✅ (NEW!)
+- Fact_Transaction: Pending ⏳
+- Fact_CustomerSnapshot: Pending ⏳
+
 ---
 
 ## Sample Insights
@@ -419,27 +427,29 @@ Created separate `BankingStaging` database (Enterprise best practice):
 
 This project demonstrates proficiency in:
 
-**Completed:**
-- ✅ Business requirements analysis and KPI definition
-- ✅ Dimensional modeling (Star Schema, SCD Type 2 design)
-- ✅ Three-layer architecture (Source, Staging, Warehouse)
-- ✅ Data quality profiling and cleansing strategies
-- ✅ Smart data augmentation for realistic datasets
-- ✅ SSIS package development (staging layer)
-- ✅ ETL performance optimization (bulk insert, parallel processing)
-- ✅ Data validation frameworks
+### ✅ Completed:
+- Business requirements analysis and KPI definition
+- Dimensional modeling (Star Schema, SCD Type 2 design)
+- Three-layer architecture (Source, Staging, Warehouse)
+- Data quality profiling and cleansing strategies
+- Smart data augmentation for realistic datasets
+- SSIS package development (staging and dimension layers)
+- ETL performance optimization (bulk insert, parallel processing)
+- Data validation frameworks
+- **SCD Type 2 implementation in ETL** (Hybrid approach: SSIS + Stored Procedures)
+- **NULL handling strategies** (default values, data quality flagging)
+- **Performance tuning** (temp tables, indexing, set-based operations)
+- **Stored Procedure development** for complex transformations
 
-**In Progress:**
-- 🔄 SCD Type 2 implementation in ETL
-- 🔄 Complex transformation logic (RF calculations)
-- 🔄 Fact table loading with dimension lookups
+### 🔄 In Progress:
+- Complex transformation logic (RF calculations)
+- Fact table loading with dimension lookups
 
-**Upcoming:**
-- ⏳ OLAP cube development with SSAS Tabular
-- ⏳ DAX formulas and calculated measures
-- ⏳ Data visualization and storytelling with Power BI
-- ⏳ End-to-end DW project lifecycle management
-
+### ⏳ Upcoming:
+- OLAP cube development with SSAS Tabular
+- DAX formulas and calculated measures
+- Data visualization and storytelling with Power BI
+- End-to-end DW project lifecycle management
 ---
 
 ## How to Use This Repository
