@@ -90,6 +90,75 @@ OLE DB Destination (Dim_Location)
 - Lookup configured with "Ignore failure" for unmatched rows
 
 ---
+### Package 3 - Load Dim_Customer ✅ COMPLETED
+
+Purpose: Load Dim_Customer with SCD Type 2 logic via Stored Procedure
+
+Architecture:
+```
+Execute SQL Task
+  ↓ EXEC DW.usp_Load_Dim_Customer
+  ↓
+Success
+```
+
+**Method:** Hybrid approach (SSIS calls SP)
+
+**Why Stored Procedure?**
+- Performance: Set-based operations in SQL Server
+- Maintainability: Business logic in database
+- Testability: Can test SP independently
+- SCD Type 2 complexity: Easier to debug in T-SQL
+
+**Data Flow:**
+```
+BankingStaging.Stg_Customer (884K records)
+  ↓
+Stored Procedure: DW.usp_Load_Dim_Customer
+  ↓ Step 1: Create #FinalStaging temp table
+  ↓   - Join with Dim_Location (via LocationCode)
+  ↓   - Calculate Age from DOB
+  ↓   - Derive AgeGroup
+  ↓   - Handle NULLs (DateOfBirth='1900-01-01', Age=0)
+  ↓ Step 2: Expire old records (Location changed)
+  ↓ Step 3: Insert new records (new customers + new versions)
+  ↓ Step 4: Update Type 1 attributes (Age, AgeGroup, Gender)
+  ↓
+Dim_Customer (884,265 records)
+```
+
+**Runtime:** ~50 seconds for 884K customers
+
+**Key Features:**
+- **SCD Type 2 for Location:** Tracks historical location changes
+- **Type 1 for Demographics:** Age, AgeGroup, Gender (overwrite)
+- **Temp Table with Index:** Clustered index on CustomerID for performance
+- **NULL Handling:** Missing DOB → '1900-01-01', Missing Age → 0
+- **LocationCode Join:** Pre-computed for SARGable performance
+
+**Results:**
+- Total records: 884,265
+- Current records: 884,265 (IsCurrent=1)
+- Historical records: 0 (first load, no location changes yet)
+
+**Data Quality Observations:**
+- 54% customers with missing DOB (source data issue)
+- 0.015% customers with missing LocationKey (locations not in Dim_Location)
+- 0.1% customers with unknown gender
+
+**Execute SQL Task Settings:**
+- Connection: BankingDW
+- SQLStatement: `EXEC DW.usp_Load_Dim_Customer;`
+- ResultSet: None
+- SQLSourceType: Direct input
+- TransactionOption: NotSupported (SP manages its own transaction)
+
+**Prerequisites:**
+1. LocationCode column added to Stg_Customer (script: `14-Add-LocationCode-To-Staging.sql`)
+2. Stored Procedure created (script: `13-Create-SP-Load-Dim-Customer.sql`)
+3. Package 1 & 2 completed (Staging and Dim_Location loaded)
+   
+---
 ### Connection Managers Required
 
 Before running the packages, ensure these connection managers are configured:
@@ -212,27 +281,93 @@ FROM BankingDW.DW.Dim_Location
 WHERE State != 'Unknown'
 ORDER BY State, City;
 ```
+**After Package 3:**
+```sql
+-- =============================================
+-- Package 3 Validation: Dim_Customer
+-- =============================================
+
+-- 1. Summary Statistics
+SELECT 
+    COUNT(*) AS TotalRecords,
+    COUNT(DISTINCT CustomerID) AS UniqueCustomers,
+    SUM(CASE WHEN IsCurrent = 1 THEN 1 ELSE 0 END) AS CurrentRecords,
+    SUM(CASE WHEN IsCurrent = 0 THEN 1 ELSE 0 END) AS HistoricalRecords
+FROM BankingDW.DW.Dim_Customer;
+-- Expected: 884,265 total, 884,265 unique, 884,265 current, 0 historical (first load)
+
+-- 2. Age Distribution
+SELECT 
+    AgeGroup, 
+    COUNT(*) AS CustomerCount,
+    CAST(COUNT(*) * 100.0 / SUM(COUNT(*)) OVER() AS DECIMAL(5,2)) AS Percentage
+FROM BankingDW.DW.Dim_Customer
+WHERE IsCurrent = 1
+GROUP BY AgeGroup
+ORDER BY AgeGroup;
+
+-- 3. Gender Distribution
+SELECT 
+    Gender, 
+    COUNT(*) AS CustomerCount,
+    CAST(COUNT(*) * 100.0 / SUM(COUNT(*)) OVER() AS DECIMAL(5,2)) AS Percentage
+FROM BankingDW.DW.Dim_Customer
+WHERE IsCurrent = 1
+GROUP BY Gender
+ORDER BY Gender;
+
+-- 4. Top 10 Locations
+SELECT TOP 10
+    Location, 
+    COUNT(*) AS CustomerCount
+FROM BankingDW.DW.Dim_Customer
+WHERE IsCurrent = 1
+GROUP BY Location
+ORDER BY CustomerCount DESC;
+
+-- 5. Data Quality Check
+SELECT 
+    SUM(CASE WHEN DateOfBirth = '1900-01-01' THEN 1 ELSE 0 END) AS MissingDOB,
+    SUM(CASE WHEN Age = 0 THEN 1 ELSE 0 END) AS MissingAge,
+    SUM(CASE WHEN Gender = 'Unknown' THEN 1 ELSE 0 END) AS UnknownGender,
+    SUM(CASE WHEN LocationKey IS NULL THEN 1 ELSE 0 END) AS MissingLocation,
+    SUM(CASE WHEN AgeGroup = 'Unknown' THEN 1 ELSE 0 END) AS UnknownAgeGroup
+FROM BankingDW.DW.Dim_Customer
+WHERE IsCurrent = 1;
+
+-- 6. Sample Records
+SELECT TOP 20
+    CustomerKey, CustomerID, DateOfBirth, Age, AgeGroup, 
+    Gender, Location, LocationKey, StartDate, EndDate, IsCurrent
+FROM BankingDW.DW.Dim_Customer
+ORDER BY CustomerKey;
+
+-- 7. SCD Type 2 Check (for future runs)
+SELECT 
+    CustomerID,
+    COUNT(*) AS VersionCount
+FROM BankingDW.DW.Dim_Customer
+GROUP BY CustomerID
+HAVING COUNT(*) > 1
+ORDER BY VersionCount DESC;
+-- Expected: 0 rows (no location changes yet)
+```
 
 ---
 
 ## Upcoming Packages
 
-### **Package 3:** Load Dim_Customer (SCD Type 2) ⏳ NEXT
-- Track historical location changes  
-- Implement **IsCurrent**, **StartDate**, **EndDate** logic  
-- Customer deduplication and versioning  
-- Calculate **Age** and **AgeGroup** from DOB  
-- Expected records: **~884K customers**  
-- Estimated runtime: **~1 hour**
+### **Package 4:** Load Fact_Transaction ⏳ NEXT
 
----
+Purpose: Load transaction-level fact table
 
-### **Package 4:** Load Fact_Transaction
-- SCD-aware **CustomerKey** lookup (match by transaction date)  
-- Dimension key lookups (Customer, Date, Location)  
-- Load **154M** transaction records  
-- Estimated runtime: **~3–4 hours**
-
+Source: Stg_Transaction (154M records)
+Destination: Fact_Transaction
+Complexity:
+- SCD-aware CustomerKey lookup (match transaction date with customer version)
+- DateKey lookup from Dim_Date
+- LocationKey lookup from Dim_Location
+Estimated Runtime: 2-3 hours for 154M records
 ---
 
 ### **Package 5:** Calculate Fact_CustomerSnapshot
