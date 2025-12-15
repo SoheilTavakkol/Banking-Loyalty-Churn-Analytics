@@ -4,6 +4,7 @@
 -- Author: Banking DW Team
 -- Date: December 2025
 -- Performance: ~50 seconds for 884K customers
+-- Fix: StartDate should be FirstTransactionDate, not current date
 -- =============================================
 
 USE BankingDW;
@@ -17,7 +18,6 @@ AS
 BEGIN
     SET NOCOUNT ON;
 
-    DECLARE @CurrentDate DATE = CAST(GETDATE() AS DATE);
     DECLARE @RowsExpired INT = 0;
     DECLARE @RowsInserted INT = 0;
     DECLARE @RowsUpdated INT = 0;
@@ -33,10 +33,10 @@ BEGIN
             ISNULL(
                 CASE 
                     WHEN TRY_CAST(NULLIF(s.DOB, 'nan') AS DATE) IS NULL THEN NULL
-                    ELSE DATEDIFF(YEAR, TRY_CAST(NULLIF(s.DOB, 'nan') AS DATE), @CurrentDate) -
-                         CASE WHEN MONTH(TRY_CAST(NULLIF(s.DOB, 'nan') AS DATE)) > MONTH(@CurrentDate) OR 
-                                  (MONTH(TRY_CAST(NULLIF(s.DOB, 'nan') AS DATE)) = MONTH(@CurrentDate) AND 
-                                   DAY(TRY_CAST(NULLIF(s.DOB, 'nan') AS DATE)) > DAY(@CurrentDate))
+                    ELSE DATEDIFF(YEAR, TRY_CAST(NULLIF(s.DOB, 'nan') AS DATE), GETDATE()) -
+                         CASE WHEN MONTH(TRY_CAST(NULLIF(s.DOB, 'nan') AS DATE)) > MONTH(GETDATE()) OR 
+                                  (MONTH(TRY_CAST(NULLIF(s.DOB, 'nan') AS DATE)) = MONTH(GETDATE()) AND 
+                                   DAY(TRY_CAST(NULLIF(s.DOB, 'nan') AS DATE)) > DAY(GETDATE()))
                               THEN 1 ELSE 0 END
                 END
             , 0) AS Age,
@@ -46,10 +46,19 @@ BEGIN
                 ELSE 'Unknown'
             END AS Gender,
             LTRIM(RTRIM(ISNULL(NULLIF(s.Location, 'nan'), 'Unspecified'))) AS Location,
-            l.LocationKey
+            l.LocationKey,
+            -- Get first transaction date for this customer
+            t.FirstTransactionDate
         INTO #FinalStaging
         FROM BankingStaging.dbo.Stg_Customer s
         LEFT JOIN DW.Dim_Location l ON s.LocationCode = l.LocationCode
+        LEFT JOIN (
+            SELECT 
+                CustomerID,
+                MIN(TRY_CAST(TransactionDate AS DATE)) AS FirstTransactionDate
+            FROM BankingStaging.dbo.Stg_Transaction
+            GROUP BY CustomerID
+        ) t ON s.CustomerID = t.CustomerID
         WHERE s.CustomerID IS NOT NULL;
 
         CREATE CLUSTERED INDEX IX_Cust ON #FinalStaging(CustomerID);
@@ -67,7 +76,7 @@ BEGIN
                       END;
 
         UPDATE dc SET 
-            EndDate = @CurrentDate, 
+            EndDate = ISNULL(s.FirstTransactionDate, CAST(GETDATE() AS DATE)),
             IsCurrent = 0, 
             ModifiedDate = GETDATE()
         FROM DW.Dim_Customer dc
@@ -82,7 +91,12 @@ BEGIN
         )
         SELECT 
             s.CustomerID, s.DateOfBirth, s.Age, s.AgeGroup, s.Gender, s.Location, s.LocationKey,
-            'Existing', NULL, @CurrentDate, NULL, 1, GETDATE()
+            'Existing', 
+            s.FirstTransactionDate, 
+            ISNULL(s.FirstTransactionDate, '2015-01-01'), -- StartDate from first transaction
+            NULL, 
+            1, 
+            GETDATE()
         FROM #FinalStaging s
         WHERE NOT EXISTS (
             SELECT 1 FROM DW.Dim_Customer dc 
@@ -119,4 +133,7 @@ BEGIN
         RAISERROR(@Err, 16, 1);
     END CATCH
 END;
+GO
+
+PRINT 'Stored Procedure updated: DW.usp_Load_Dim_Customer';
 GO
