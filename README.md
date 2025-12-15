@@ -68,7 +68,7 @@ Banking-Loyalty-Churn-Analytics/
 │   │   ├── Package 1 - Load Staging.dtsx     ✅ COMPLETED
 │   │   ├── Package 2 - Load Dim Location     ✅ COMPLETED
 │   │   ├── Package 3 - Load Dim Customer     ✅ COMPLETED
-│   │   ├── Package 4 - Load Fact Trans       ⏳ Upcoming
+│   │   ├── Package 4 - Load Fact Trans       ✅ COMPLETED
 │   │   └── Package 5 - CustomerSnapshot      ⏳ Upcoming
 │   └── README.md
 │
@@ -255,9 +255,9 @@ Implemented a **smart data augmentation pipeline** using Python (v2.0 - Memory O
 
 ---
 
-### 🔄 Phase 5: ETL Development (In Progress)
+### 🔄 Phase 5: ETL Development (80% Complete)
 
-#### ✅ Completed: Staging Database & Package 1
+#### ✅ Completed Packages
 
 **1. Staging Database Architecture**
 
@@ -265,6 +265,8 @@ Created separate `BankingStaging` database (Enterprise best practice):
 - `Stg_Customer` (884K records)
 - `Stg_Transaction` (154M records)
 - `Stg_Location` (9K records)
+
+---
 
 **2. Package 1 - Load Staging ✅ COMPLETED**
 
@@ -285,38 +287,53 @@ Created separate `BankingStaging` database (Enterprise best practice):
 - Parallel execution: All three flows run simultaneously
 - Error handling: Validation flags instead of load failures
 
-**Technical Details:**
-- Fast Load with TABLOCK
-- Maximum insert commit size: 0 (single transaction)
-- Rows per batch: 500,000
-- Check constraints disabled during load
-- Data type preservation (VARCHAR/NVARCHAR in staging)
+---
 
-#### ⏳ Upcoming Packages
+**3. Package 2 - Load Dim_Location ✅ COMPLETED**
 
-**Package 2: Load Dim_Location**
 - Extract distinct locations from staging
-- Assign LocationKey (surrogate key)
-- ~1 minute runtime
+- Data enrichment with City_Lookup reference table
+- LocationKey assignment (surrogate key)
+- **Runtime:** ~30 seconds for 9K locations
 
-**Package 3: Load Dim_Customer (SCD Type 2)**
-- Track historical location changes
-- SCD Type 2 logic (IsCurrent, StartDate, EndDate)
+---
+
+**4. Package 3 - Load Dim_Customer ✅ COMPLETED**
+
+- SCD Type 2 implementation via Stored Procedure
+- Track historical location changes (IsCurrent, StartDate, EndDate)
 - Customer deduplication and versioning
+- Calculate Age and AgeGroup
+- **Runtime:** ~50 seconds for 884K customers
+- **Method:** Hybrid approach (SSIS + SP)
 
-**Package 4: Load Fact_Transaction**
-- SCD-aware lookups (match customer version by date)
-- Dimension key lookups
-- 154M records load
+---
 
-**Package 5: Calculate Fact_CustomerSnapshot**
+**5. Package 4 - Load Fact_Transaction ✅ COMPLETED**
+
+- SCD-aware CustomerKey lookup (match transaction date with customer version)
+- Dimension key lookups (Customer, Date, Location)
+- Direct INSERT with JOINs via Stored Procedure
+- **Runtime:** 1 hour 48 minutes for 154M transactions
+- **Method:** Stored Procedure (set-based operations)
+
+---
+
+#### ⏳ Upcoming Package
+
+**Package 5: Calculate Fact_CustomerSnapshot** ⏳ **NEXT**
+
 - Monthly aggregation (Customer-Month grain)
-- RF score calculations (1-5 scale)
+- RF score calculations (Recency: 1-5, Frequency: 1-5)
 - Loyalty & Satisfaction scores
 - Churn flag (Recency > 90 days)
 - Complaint flag (frequency decline > 30%)
-- Segment assignment
-- Trend analysis
+- Segment assignment from Dim_Segment
+- Trend analysis (growth rate)
+- **Expected records:** ~15-20M (884K customers × 20 months)
+- **Estimated runtime:** ~2-3 hours
+
+---
 
 📄 [View SSIS Packages](05-SSIS-Packages/)
 
@@ -398,12 +415,12 @@ Created separate `BankingStaging` database (Enterprise best practice):
 - Parallel execution: 3 simultaneous data flows
 
 **Data Loaded:**
-- Dim_Date: 5,844 rows ✅
-- Dim_Segment: 7 rows ✅
-- Dim_Location: 9,021 rows ✅
-- Dim_Customer: 884,265 rows ✅ (NEW!)
-- Fact_Transaction: Pending ⏳
-- Fact_CustomerSnapshot: Pending ⏳
+- Dim_Date: 5,844 rows                            ✅
+- Dim_Segment: 7 rows                             ✅
+- Dim_Location: 9,021 rows                        ✅
+- Dim_Customer: 884,265 rows                      ✅
+- Fact_Transaction: 154,777,534 rows              ✅ (NEW!)
+- Fact_CustomerSnapshot:                          Pending ⏳
 
 ---
 
@@ -512,7 +529,7 @@ python generate_extended_transactions.py
 - Database Setup: ✅ 100%
 - Data Modeling: ✅ 100%
 - Data Augmentation: ✅ 100%
-- ETL Development: 🔄 20% (1 of 5 packages complete)
+- ETL Development: 🔄 80% (4 of 5 packages complete)
 - OLAP: ⏳ 0%
 - Visualization: ⏳ 0%
 - Testing: ⏳ 0%
