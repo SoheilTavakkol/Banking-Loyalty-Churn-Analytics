@@ -58,13 +58,14 @@ Schema modifications, stored procedures, and staging enhancements.
 -- Step 6: Schema corrections
 12-Alter-Dim-Location-DataTypes.sql -- Convert VARCHAR to NVARCHAR for Unicode support
 
--- Step 7: Stored Procedures
+-- Step 7: Staging enhancements
+14-Add-LocationCode-To-Staging.sql  -- Add LocationCode column for SARGable joins
+
+-- Step 8: Stored Procedures
 13-Create-SP-Load-Dim-Customer.sql  -- SP for SCD Type 2 Customer loading (~50 sec for 884K)
 15-Create-SP-Load-Fact-Transaction.sql -- SP for Fact_Transaction loading (~108 min for 154M)
-
--- Step 8: Staging enhancements
-14-Add-LocationCode-To-Staging.sql  -- Add LocationCode column for SARGable joins
 ```
+
 
 ---
 
