@@ -168,27 +168,86 @@ Before running the packages, ensure these connection managers are configured:
 3. **BankingDW** → Data Warehouse (for future packages)
 
 ---
+### Package 4 - Load Fact_Transaction ✅ COMPLETED
 
+**Purpose:** Load transaction-level fact table with dimension lookups
+
+**Architecture:**
+```
+Execute SQL Task
+  ↓ EXEC DW.usp_Load_Fact_Transaction
+  ↓
+Success
+```
+
+**Method:** Stored Procedure (Direct INSERT with JOINs)
+
+**Why Stored Procedure?**
+- SCD-aware lookup: Match transaction date with customer version
+- Set-based operations: Much faster than row-by-row SSIS Lookup
+- Complex JOIN logic: BETWEEN clause for SCD Type 2
+- Performance: 154M records in ~2 hours
+
+**Data Flow:**
+```
+BankingStaging.Stg_Transaction (154M records)
+  ↓
+Stored Procedure: DW.usp_Load_Fact_Transaction
+  ↓ Step 1: INSERT with JOINs
+  ↓   - SCD-aware CustomerKey lookup:
+  ↓     JOIN Dim_Customer WHERE TransactionDate BETWEEN StartDate AND EndDate
+  ↓   - DateKey lookup: CAST(CONVERT(VARCHAR(8), Date, 112) AS INT)
+  ↓   - LocationKey lookup: via LocationCode
+  ↓
+Fact_Transaction (154,777,534 records)
+```
+
+**Runtime:** 1 hour 48 minutes for 154M transactions
+
+**Key Features:**
+- **SCD-aware Lookup:** Matches transaction to correct customer version
+- **Direct INSERT:** No temp tables, single statement
+- **DateKey Formula:** YYYYMMDD format (e.g., 20150321)
+- **NULL Handling:** LocationKey can be NULL (22K records, 0.014%)
+
+**Results:**
+- Total records: 154,777,534
+- Date range: 2015-01-01 to 2016-08-31 (20 months)
+- NULL CustomerKey: 0
+- NULL DateKey: 0
+- NULL LocationKey: 22,048 (0.014% - acceptable)
+
+**Execute SQL Task Settings:**
+- Connection: BankingDW
+- SQLStatement: `EXEC DW.usp_Load_Fact_Transaction;`
+- ResultSet: None
+- SQLSourceType: Direct input
+- TransactionOption: NotSupported
+
+**Prerequisites:**
+1. Package 3 completed (Dim_Customer with correct StartDate)
+2. Stored Procedure created (script: `15-Create-SP-Load-Fact-Transaction.sql`)
+3. Dim_Customer StartDate = FirstTransactionDate (not current date!)
+
+**Critical Fix Applied:**
+- Initially Dim_Customer had StartDate = 2025-12-03 (current date)
+- Transactions are 2015-2016
+- Result: 0 matches!
+- Fix: Modified Package 3 SP to use FirstTransactionDate as StartDate
+
+---
 
 ## Database Architecture
 ```
-BankingSource (OLTP)
-    └── RawTransactions (154M records)
-              ↓
-BankingStaging (Staging Layer)
-    ├── Stg_Customer (884K records)
-    ├── Stg_Transaction (154M records)
-    └── Stg_Location (9K records)
-              ↓
 BankingDW (Data Warehouse)
     ├── Dimensions:
-    │   ├── Dim_Date (Pre-populated: 5,844 rows)
-    │   ├── Dim_Segment (Pre-populated: 7 segments)
-    │   ├── Dim_Location (Loaded: 9,021 rows) 
-    │   └── Dim_Customer (SCD Type 2) ⏳ Next
+    │   ├── Dim_Date (Pre-populated: 5,844 rows) ✅
+    │   ├── Dim_Segment (Pre-populated: 7 segments) ✅
+    │   ├── Dim_Location (Loaded: 9,021 rows) ✅
+    │   └── Dim_Customer (Loaded: 884,265 rows) ✅
     └── Facts:
-        ├── Fact_Transaction (transaction-level grain)
-        └── Fact_CustomerSnapshot (customer-month grain)
+        ├── Fact_Transaction (Loaded: 154,777,534 rows) ✅
+        └── Fact_CustomerSnapshot (Pending) ⏳
 ```
 
 ---
@@ -352,34 +411,80 @@ HAVING COUNT(*) > 1
 ORDER BY VersionCount DESC;
 -- Expected: 0 rows (no location changes yet)
 ```
+### After Package 4:
+```sql
+-- =============================================
+-- Package 4 Validation: Fact_Transaction
+-- =============================================
 
+-- 1. Total Records
+SELECT COUNT(*) AS TotalTransactions
+FROM DW.Fact_Transaction;
+-- Expected: ~154,777,534
+
+-- 2. Date Range
+SELECT 
+    MIN(dd.Date) AS MinDate,
+    MAX(dd.Date) AS MaxDate
+FROM DW.Fact_Transaction ft
+INNER JOIN DW.Dim_Date dd ON ft.DateKey = dd.DateKey;
+-- Expected: 2015-01-01 to 2016-08-31
+
+-- 3. NULL Check
+SELECT 
+    SUM(CASE WHEN CustomerKey IS NULL THEN 1 ELSE 0 END) AS NullCustomerKey,
+    SUM(CASE WHEN DateKey IS NULL THEN 1 ELSE 0 END) AS NullDateKey,
+    SUM(CASE WHEN LocationKey IS NULL THEN 1 ELSE 0 END) AS NullLocationKey
+FROM DW.Fact_Transaction;
+-- Expected: 0, 0, ~22K
+
+-- 4. Sample Records
+SELECT TOP 20
+    ft.TransactionKey,
+    ft.CustomerKey,
+    ft.DateKey,
+    ft.LocationKey,
+    ft.TransactionID,
+    ft.TransactionAmount,
+    ft.AccountBalance,
+    dc.CustomerID,
+    dd.Date
+FROM DW.Fact_Transaction ft
+INNER JOIN DW.Dim_Customer dc ON ft.CustomerKey = dc.CustomerKey
+INNER JOIN DW.Dim_Date dd ON ft.DateKey = dd.DateKey
+ORDER BY ft.TransactionKey;
+
+-- 5. Transaction Volume by Month
+SELECT 
+    dd.YearMonth,
+    COUNT(*) AS TransactionCount,
+    SUM(ft.TransactionAmount) AS TotalAmount
+FROM DW.Fact_Transaction ft
+INNER JOIN DW.Dim_Date dd ON ft.DateKey = dd.DateKey
+GROUP BY dd.YearMonth
+ORDER BY dd.YearMonth;
+```
 ---
 
-## Upcoming Packages
+### Upcoming Packages
 
-### **Package 4:** Load Fact_Transaction ⏳ NEXT
+**Package 5: Calculate Fact_CustomerSnapshot** ⏳ **NEXT**
 
-Purpose: Load transaction-level fact table
+Purpose: Monthly customer-level aggregation with RF analysis
 
-Source: Stg_Transaction (154M records)
-Destination: Fact_Transaction
+Source: Fact_Transaction + Dim_Customer
+Destination: Fact_CustomerSnapshot
 Complexity:
-- SCD-aware CustomerKey lookup (match transaction date with customer version)
-- DateKey lookup from Dim_Date
-- LocationKey lookup from Dim_Location
-Estimated Runtime: 2-3 hours for 154M records
----
+- Monthly aggregation per customer
+- RF score calculations (Recency: 1-5, Frequency: 1-5)
+- Loyalty & Satisfaction scores
+- Churn flag (Recency > 90 days)
+- Complaint flag (frequency decline > 30%)
+- Segment assignment from Dim_Segment
+- Trend analysis (growth rate)
 
-### **Package 5:** Calculate Fact_CustomerSnapshot
-- Monthly aggregation (**Customer–Month** grain)  
-- **RF score** calculations (Recency: 1–5, Frequency: 1–5)  
-- Loyalty & Satisfaction scores  
-- Churn flag (**Recency > 90 days**)  
-- Complaint flag (**frequency decline > 30%**)  
-- Segment assignment from **Dim_Segment**  
-- Trend analysis (growth rate)  
-- Expected records: **~15–20M** (884K customers × 20 months)  
-- Estimated runtime: **~2–3 hours**
+Expected records: ~15-20M (884K customers × 20 months)
+Estimated runtime: ~2-3 hours
 
 ---
 
