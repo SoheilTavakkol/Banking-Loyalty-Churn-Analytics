@@ -63,13 +63,13 @@ Banking-Loyalty-Churn-Analytics/
 │   ├── requirements.txt                      ✅ Dependencies
 │   └── README.md                             ✅ Documentation
 │
-├── 05-SSIS-Packages/                         🔄 Phase 5 (In Progress)
+├── 05-SSIS-Packages/                         
 │   ├── BankingETL/
 │   │   ├── Package 1 - Load Staging.dtsx     ✅ COMPLETED
 │   │   ├── Package 2 - Load Dim Location     ✅ COMPLETED
 │   │   ├── Package 3 - Load Dim Customer     ✅ COMPLETED
 │   │   ├── Package 4 - Load Fact Trans       ✅ COMPLETED
-│   │   └── Package 5 - CustomerSnapshot      ⏳ Upcoming
+│   │   └── Package 5 - CustomerSnapshot      ✅ COMPLETED
 │   └── README.md
 │
 ├── 06-SSAS-Tabular/                          ⏳ Phase 6
@@ -255,7 +255,7 @@ Implemented a **smart data augmentation pipeline** using Python (v2.0 - Memory O
 
 ---
 
-### 🔄 Phase 5: ETL Development (80% Complete)
+### ✅ Phase 5: ETL Development (COMPLETED)
 
 #### ✅ Completed Packages
 
@@ -321,17 +321,15 @@ Created separate `BankingStaging` database (Enterprise best practice):
 
 #### ⏳ Upcoming Package
 
-**Package 5: Calculate Fact_CustomerSnapshot** ⏳ **NEXT**
+**5. Package 5 - Load Fact_CustomerSnapshot ✅ COMPLETED**
 
-- Monthly aggregation (Customer-Month grain)
-- RF score calculations (Recency: 1-5, Frequency: 1-5)
+- Monthly aggregation with 5-task architecture
+- RF score calculations via Stored Procedures
 - Loyalty & Satisfaction scores
-- Churn flag (Recency > 90 days)
-- Complaint flag (frequency decline > 30%)
-- Segment assignment from Dim_Segment
-- Trend analysis (growth rate)
-- **Expected records:** ~15-20M (884K customers × 20 months)
-- **Estimated runtime:** ~2-3 hours
+- Churn/AtRisk flags
+- Segment assignment
+- **Runtime:** ~13 minutes for 15.6M records
+- **Method:** 5 Sequential Stored Procedures
 
 ---
 
@@ -419,8 +417,8 @@ Created separate `BankingStaging` database (Enterprise best practice):
 - Dim_Segment: 7 rows                             ✅
 - Dim_Location: 9,021 rows                        ✅
 - Dim_Customer: 884,265 rows                      ✅
-- Fact_Transaction: 154,777,534 rows              ✅ (NEW!)
-- Fact_CustomerSnapshot:                          Pending ⏳
+- Fact_Transaction: 154,777,534 rows              ✅ 
+- Fact_CustomerSnapshot: 15,581,079 rows          ✅
 
 ---
 
@@ -457,10 +455,12 @@ This project demonstrates proficiency in:
 - **NULL handling strategies** (default values, data quality flagging)
 - **Performance tuning** (temp tables, indexing, set-based operations)
 - **Stored Procedure development** for complex transformations
-
-### 🔄 In Progress:
 - Complex transformation logic (RF calculations)
 - Fact table loading with dimension lookups
+- Complex transformation logic (RF calculations)
+- Monthly aggregation fact tables
+- Multi-stage ETL pipelines with Stored Procedures
+- Global temp table management in SQL Server
 
 ### ⏳ Upcoming:
 - OLAP cube development with SSAS Tabular
@@ -518,18 +518,16 @@ python generate_extended_transactions.py
 
 ## Project Status
 
-**Current Phase:** Phase 5 - ETL Development (Package 1 Complete)
+**Current Phase:** Phase 5 - ETL Development (COMPLETED)
 
 **Last Updated:** November 2025
-
-**Next Milestone:** Package 2 - Load Dim_Location
 
 **Progress:**
 - Requirements: ✅ 100%
 - Database Setup: ✅ 100%
 - Data Modeling: ✅ 100%
 - Data Augmentation: ✅ 100%
-- ETL Development: 🔄 80% (4 of 5 packages complete)
+- ETL Development: ✅ 100% (All 5 packages complete)
 - OLAP: ⏳ 0%
 - Visualization: ⏳ 0%
 - Testing: ⏳ 0%
