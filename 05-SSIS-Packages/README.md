@@ -8,6 +8,9 @@ This folder contains SQL Server Integration Services (SSIS) packages for the Ban
 └── BankingETL/
     ├── Package 1 - Load Staging.dtsx
     ├── Package 2 - Load Dim_Location.dtsx
+    ├── Package 3 - Load Dim_Customer.dtsx
+    ├── Package 4 - Load Fact_Transaction.dtsx
+    ├── Package 5 - Calculate CustomerSnapshot.dtsx
     ├── BankingETL.sln
     └── (other SSIS project files)
 ```
@@ -237,6 +240,48 @@ Fact_Transaction (154,777,534 records)
 
 ---
 
+### Package 5 - Calculate Fact_CustomerSnapshot ✅ COMPLETED
+
+**Purpose:** Monthly customer aggregation with RF analysis and business metrics
+
+**Architecture:** 5-Task Sequential Pipeline (All Execute SQL Tasks)
+
+**Tasks:**
+1. **Build Monthly Activity** (~60 sec)
+   - Aggregate 154M transactions → 13.7M monthly records
+   - SP: `DW.usp_Build_MonthlyActivity`
+   
+2. **Build Customer Spine** (~90 sec)
+   - Create customer-month timeline → 15.6M records
+   - SP: `DW.usp_Build_CustomerSpine`
+   
+3. **Merge & Calculate RF** (~55 sec)
+   - Join spine with activity + RF calculations
+   - SP: `DW.usp_Merge_CalculateRF`
+   
+4. **Calculate Business Metrics** (~250 sec)
+   - Loyalty, satisfaction, churn, complaints
+   - SP: `DW.usp_Calculate_BusinessMetrics`
+   
+5. **Load Fact Table** (~30 sec)
+   - Insert into Fact_CustomerSnapshot
+   - SP: `DW.usp_Load_FactCustomerSnapshot`
+
+**Total Runtime:** ~13 minutes
+
+**Results:**
+- Records loaded: 15,581,079
+- Churn rate: 9.74%
+- Loyalty distribution: 75% High/Very High
+
+**Key Features:**
+- Global temp tables (`##`) for inter-SP communication
+- Parameter passing (`@CutoffDate = '2016-08-31'`)
+- Set-based operations for performance
+- Segment assignment via Dim_Segment rules
+
+---
+
 ## Database Architecture
 ```
 BankingDW (Data Warehouse)
@@ -247,7 +292,7 @@ BankingDW (Data Warehouse)
     │   └── Dim_Customer (Loaded: 884,265 rows) ✅
     └── Facts:
         ├── Fact_Transaction (Loaded: 154,777,534 rows) ✅
-        └── Fact_CustomerSnapshot (Pending) ⏳
+        └── Fact_CustomerSnapshot (Loaded: 15,581,079 rows) ✅
 ```
 
 ---
@@ -465,27 +510,42 @@ GROUP BY dd.YearMonth
 ORDER BY dd.YearMonth;
 ```
 ---
+### After Package 5:
+```sql
+-- =============================================
+-- Package 5 Validation: Fact_CustomerSnapshot
+-- =============================================
 
-### Upcoming Packages
+-- Total records
+SELECT COUNT(*) FROM DW.Fact_CustomerSnapshot;
+-- Expected: 15,581,079
 
-**Package 5: Calculate Fact_CustomerSnapshot** ⏳ **NEXT**
+-- Loyalty distribution
+SELECT 
+    CASE 
+        WHEN LoyaltyScore >= 4.5 THEN 'Very High'
+        WHEN LoyaltyScore >= 3.5 THEN 'High'
+        WHEN LoyaltyScore >= 2.5 THEN 'Medium'
+        ELSE 'Low'
+    END AS Category,
+    COUNT(*) AS Records,
+    FORMAT(COUNT(*)*100.0/SUM(COUNT(*)) OVER(), 'N1')+'%' AS Pct
+FROM DW.Fact_CustomerSnapshot
+GROUP BY CASE 
+    WHEN LoyaltyScore >= 4.5 THEN 'Very High'
+    WHEN LoyaltyScore >= 3.5 THEN 'High'
+    WHEN LoyaltyScore >= 2.5 THEN 'Medium'
+    ELSE 'Low' END
+ORDER BY Category DESC;
 
-Purpose: Monthly customer-level aggregation with RF analysis
-
-Source: Fact_Transaction + Dim_Customer
-Destination: Fact_CustomerSnapshot
-Complexity:
-- Monthly aggregation per customer
-- RF score calculations (Recency: 1-5, Frequency: 1-5)
-- Loyalty & Satisfaction scores
-- Churn flag (Recency > 90 days)
-- Complaint flag (frequency decline > 30%)
-- Segment assignment from Dim_Segment
-- Trend analysis (growth rate)
-
-Expected records: ~15-20M (884K customers × 20 months)
-Estimated runtime: ~2-3 hours
-
+-- Churn analysis
+SELECT 
+    ChurnFlag,
+    COUNT(*) AS Records,
+    AVG(LoyaltyScore) AS AvgLoyalty
+FROM DW.Fact_CustomerSnapshot
+GROUP BY ChurnFlag;
+```
 ---
 
 ## Notes
