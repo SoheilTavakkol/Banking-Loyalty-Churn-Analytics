@@ -62,10 +62,14 @@ Schema modifications, stored procedures, and staging enhancements.
 14-Add-LocationCode-To-Staging.sql  -- Add LocationCode column for SARGable joins
 
 -- Step 8: Stored Procedures
-13-Create-SP-Load-Dim-Customer.sql  -- SP for SCD Type 2 Customer loading (~50 sec for 884K)
-15-Create-SP-Load-Fact-Transaction.sql -- SP for Fact_Transaction loading (~108 min for 154M)
+13-Create-SP-Load-Dim-Customer.sql       -- SP for SCD Type 2
+15-Create-SP-Load-Fact-Transaction.sql   -- SP for Fact load
+16-Create-SP-Package5-Task1.sql          -- Build MonthlyActivity
+17-Create-SP-Package5-Task2.sql          -- Build CustomerSpine
+18-Create-SP-Package5-Task3.sql          -- Merge & Calculate RF
+19-Create-SP-Package5-Task4.sql          -- Calculate Business Metrics
+20-Create-SP-Package5-Task5.sql          -- Load FactCustomerSnapshot
 ```
-
 
 ---
 
@@ -93,6 +97,7 @@ Schema modifications, stored procedures, and staging enhancements.
 |--------|-----------|---------|---------|---------|
 | 13 | usp_Load_Dim_Customer | SCD Type 2 logic | ~50 sec | Package 3 |
 | 15 | usp_Load_Fact_Transaction | Fact load with SCD-aware joins | ~108 min | Package 4 |
+| 16-20 | Package 5 SPs (5 tasks) | Monthly aggregation | ~13 min | Package 5 |
 
 ---
 
