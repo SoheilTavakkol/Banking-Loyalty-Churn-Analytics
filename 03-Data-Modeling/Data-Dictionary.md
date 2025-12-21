@@ -90,9 +90,10 @@
 **Schema:** DW  
 **Purpose:** Customer demographic and profile information  
 **Type:** Slowly Changing Dimension (Type 2 for Location)  
-**Rows:** ~900,000 (includes historical versions)  
+**Rows:** 884,265 (loaded via Package 3)  
 **Grain:** One row per customer per location change  
 **SCD Type:** Type 2 (Location), Type 1 (Age, Gender)
+**Status:** ✅ Loaded - No location changes yet (all IsCurrent=1)
 
 #### Columns
 
@@ -279,9 +280,11 @@
 **Schema:** DW  
 **Purpose:** Transaction-level detail for granular analysis  
 **Type:** Transaction fact table  
-**Rows:** 1,000,000+  
+**Rows:** 154,777,534 (loaded via Package 4)  
 **Grain:** One row per transaction  
 **Load Frequency:** Daily (incremental)
+**Date Range:** 2015-01-01 to 2016-08-31 (20 months)
+**Status:** ✅ Loaded
 
 #### Columns
 
@@ -327,9 +330,12 @@
 **Schema:** DW  
 **Purpose:** Monthly aggregated customer metrics for trend analysis  
 **Type:** Periodic snapshot fact table  
-**Rows:** ~27,000 per month (~900K customers × 3 months ÷ 100)  
+**Rows:** 15,581,079 (loaded via Package 5)  
 **Grain:** One row per customer per month  
 **Load Frequency:** Monthly (full refresh for completed months)
+**Coverage:** 884K customers × ~18 months average
+**Date Range:** 2015-01-31 to 2016-08-31
+**Status:** ✅ Loaded
 
 #### Columns
 
@@ -488,9 +494,9 @@ CSV File (bank_transactions.xlsx)
     ↓
 BankingSource.dbo.RawTransactions
     ↓
-BankingDW.ETL.Stg_Customer
-BankingDW.ETL.Stg_Transaction
-BankingDW.ETL.Stg_Location
+BankingStaging.dbo.Stg_Customer
+BankingStaging.dbo.Stg_Transaction
+BankingStaging.dbo.Stg_Location
     ↓
 BankingDW.DW.Dim_Customer (SCD Type 2)
 BankingDW.DW.Dim_Location
@@ -501,7 +507,16 @@ BankingDW.DW.Fact_CustomerSnapshot (aggregation)
 
 ---
 
-**Document Version:** 1.0  
-**Maintained By:** Data Team  
+**Document Version:** 1.1  
+- Last Updated: December 2025
+- Status: ✅ Complete - All data loaded and validated
+- ETL Status:
+    ✅ Package 1: Staging loaded (155M records)
+    ✅ Package 2: Dim_Location loaded (9,021 locations)
+    ✅ Package 3: Dim_Customer loaded (884K customers)
+    ✅ Package 4: Fact_Transaction loaded (154M transactions)
+    ✅ Package 5: Fact_CustomerSnapshot loaded (15.6M snapshots)
 
-**Review Frequency:** Quarterly or after schema changes
+- Review Frequency: Quarterly or after schema/ETL changes
+- Next Review: Before Phase 7 (Power BI Dashboards)
+
