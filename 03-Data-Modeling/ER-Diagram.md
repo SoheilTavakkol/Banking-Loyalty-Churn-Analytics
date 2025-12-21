@@ -275,14 +275,14 @@ graph LR
 graph TD
     subgraph "Fact_Transaction Grain"
         FT1[One row per transaction]
-        FT2[High volume: 1M+ rows]
+        FT2[High volume: 154M+ rows]
         FT3[Detailed analysis]
         FT4[Example: 5 transactions = 5 rows]
     end
     
     subgraph "Fact_CustomerSnapshot Grain"
         FS1[One row per customer per month]
-        FS2[Medium volume: ~27K rows/month]
+        FS2[Medium volume: ~780K rows/month average]
         FS3[Trend analysis]
         FS4[Example: 5 customers, 1 month = 5 rows]
     end
@@ -398,6 +398,20 @@ ORDER BY D.YearMonth;
 | Dim_Segment → Fact_CustomerSnapshot | 1:Many | One segment, many customer-months |
 
 ---
+## Actual Data Volumes (As of December 2025)
+
+| Table | Rows Loaded | Date Range | Source |
+|-------|-------------|------------|--------|
+| Dim_Date | 5,844 | 2015-2030 | Pre-populated |
+| Dim_Location | 9,021 | - | Package 2 |
+| Dim_Customer | 884,265 | - | Package 3 |
+| Dim_Segment | 7 | - | Pre-populated |
+| Fact_Transaction | 154,777,534 | 2015-01 to 2016-08 | Package 4 |
+| Fact_CustomerSnapshot | 15,581,079 | 2015-01 to 2016-08 | Package 5 |
+
+**Total DW Size:** ~17 GB (including indexes)
+
+---
 
 ## Referential Integrity
 
@@ -428,7 +442,18 @@ graph LR
 
 ---
 
-**Document Version:** 1.0  
-**Created:** November 2025  
+**Document Version:** 1.1  
+**Last Updated:** December 2025  
 **Tool:** Mermaid.js  
-**GitHub Rendering:** Automatic
+
+**Implementation Status:**
+- ✅ Physical Schema: Created (Phase 2)
+- ✅ Data Loaded: All tables populated (Phase 5)
+  - Dim_Date: 5,844 rows
+  - Dim_Location: 9,021 rows
+  - Dim_Customer: 884,265 rows (SCD Type 2 ready)
+  - Dim_Segment: 7 segments
+  - Fact_Transaction: 154,777,534 rows
+  - Fact_CustomerSnapshot: 15,581,079 rows
+
+**GitHub Rendering:** Automatic via Mermaid.js
