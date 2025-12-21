@@ -17,7 +17,17 @@ This document provides a comprehensive description of the dimensional data model
 - **Design Methodology:** Dimensional Modeling (Kimball)
 - **SCD Strategy:** Type 2 for Customer Location changes
 
-### 1.3 Key Design Decisions
+### 1.3 Implementation Status
+
+✅ Phase 2: Physical schema created
+✅ Phase 3: Model design documented  
+✅ Phase 5: All tables loaded and validated
+    - Dimensions: 4 tables (899K total rows)
+    - Facts: 2 tables (170M+ total rows)
+    - ETL: 5 SSIS packages completed
+⏳ Phase 6: SSAS Tabular model (next)
+
+### 1.4 Key Design Decisions
 
 | Decision | Rationale |
 |----------|-----------|
@@ -410,24 +420,25 @@ Dim_Segment (1) ─────< (Many) Fact_CustomerSnapshot
 | Table | Rows | Growth Rate |
 |-------|------|-------------|
 | Dim_Date | 5,844 | Static (pre-populated) |
-| Dim_Location | ~500 | Slow (new locations rare) |
-| Dim_Customer | ~900K | Medium (new customers + SCD versions) |
+| Dim_Location | 9021 | Slow (new locations rare) |
+| Dim_Customer | 884,265 | Medium (new customers + SCD versions) |
 | Dim_Segment | 7 | Very slow (rule changes rare) |
-| Fact_Transaction | 1M+ | High (daily transactions) |
-| Fact_CustomerSnapshot | ~27K/month | Medium (monthly snapshots) |
+| Fact_Transaction | 154,777,534 | High (daily transactions) |
+| Fact_CustomerSnapshot | 15,581,079 | Medium (monthly snapshots) |
 
 ### 6.2 Storage Estimates
 
 **Fact_Transaction:**
-- Row size: ~50 bytes
-- 1M rows: ~50 MB
-- Annual growth: ~18M rows → ~900 MB/year
+- Row size: ~60 bytes
+- 154M rows: ~9.2 GB
+- Covers: 20 months (Jan 2015 - Aug 2016)
 
 **Fact_CustomerSnapshot:**
-- Row size: ~120 bytes
-- 900K customers × 12 months: ~10.8M rows → ~1.3 GB/year
+- Row size: ~140 bytes
+- 15.6M rows: ~2.1 GB
+- Covers: 884K customers × 20 months average
 
-**Total DW size (3 years):** ~5-6 GB (excluding indexes)
+**Current DW size:** ~17 GB (including indexes and staging)
 
 ---
 
@@ -655,6 +666,7 @@ The design balances analytical depth with implementation simplicity, making it s
 
 ---
 
-**Document Version:** 1.0  
-**Last Updated:** November 2025  
-**Next Review:** Before Phase 4 (ETL Development)
+**Document Version:** 1.1  
+**Last Updated:** December 2025  
+**Next Review:** Before Phase 7 (Power BI Dashboards)
+**Status:** ✅ Complete - All tables loaded and validated
