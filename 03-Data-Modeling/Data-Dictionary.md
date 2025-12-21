@@ -1,8 +1,8 @@
 # Data Dictionary
 ## Banking Customer Loyalty & Churn Analysis Data Warehouse
 
-**Version:** 1.0  
-**Last Updated:** November 2025
+**Version:** 1.1  
+**Last Updated:** December 2025
 
 ---
 
