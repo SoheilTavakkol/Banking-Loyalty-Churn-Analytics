@@ -524,9 +524,9 @@ This document is part of the project documentation suite:
 │   ├── BankingETL/
 │   │   ├── Package 1 - Load Staging.dtsx           ✅
 │   │   ├── Package 2 - Load Dim_Location.dtsx      ✅
-│   │   ├── Package 3 - Load Dim_Customer.dtsx      ⏳
-│   │   ├── Package 4 - Load Fact_Transaction.dtsx  ⏳
-│   │   └── Package 5 - CustomerSnapshot.dtsx       ⏳
+│   │   ├── Package 3 - Load Dim_Customer.dtsx      ✅
+│   │   ├── Package 4 - Load Fact_Transaction.dtsx  ✅
+│   │   └── Package 5 - CustomerSnapshot.dtsx       ✅
 │   └── README.md                                   ✅
 ├── /06-SSAS-Tabular                                ⏳
 ├── /07-PowerBI-Dashboards                          ⏳
