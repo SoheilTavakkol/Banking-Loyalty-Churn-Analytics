@@ -1,57 +1,36 @@
 # Phase 6: SSAS Tabular Model
 
 ## Status
-✅ **Step 1 Complete:** Project Setup
+✅ **Steps 1-3 Complete:** Project Setup, Data Source, Tables Imported
 
 ## Project Information
 - **Model Name:** BankingTabularModel
 - **Compatibility Level:** 1600 (SQL Server 2022)
-- **Workspace:** Integrated Workspace (localhost:62173)
+- **Workspace:** Integrated Workspace
 - **Target Database:** BankingTabularModel
-- **Deployment Server:** localhost\SSAS_Tabular
+- **Data Source:** SOHEILT;BankingDW
 
-## Build Information
-- Build Status: ✅ Success
-- Build Time: ~1.5 seconds
-- Configuration: Development x86
+## Tables Imported (5)
+- ✅ DW.Dim_Date (5,844 rows)
+- ✅ DW.Dim_Customer (884K rows - filtered IsCurrent=1)
+- ✅ DW.Dim_Location (9,021 rows)
+- ✅ DW.Dim_Segment (7 rows)
+- ✅ DW.Fact_CustomerSnapshot (15.6M rows)
 
-## Project Structure
-```
-BankingTabularModel/
-├── Model.bim (main model file)
-├── BankingTabularModel.smproj
-└── BankingTabularModel.sln
-```
+## Relationships (4)
+- ✅ Dim_Customer → Dim_Location (Many-to-One)
+- ✅ Fact_CustomerSnapshot → Dim_Customer (Many-to-One)
+- ✅ Fact_CustomerSnapshot → Dim_Date (Many-to-One)
+- ✅ Fact_CustomerSnapshot → Dim_Segment (Many-to-One)
 
-## Current State
-- **Data Sources:** 0 (not yet configured)
-- **Tables:** 0 (not yet imported)
-- **Relationships:** 0 (not yet created)
-- **Measures:** 0 (not yet created)
+**All relationships:** Active, Single direction, Many-to-One cardinality
 
 ## Next Steps
-- [ ] Step 2: Add data source connection to BankingDW
-- [ ] Step 3: Import dimension tables
-- [ ] Step 4: Import fact tables
-- [ ] Step 5: Create relationships
-- [ ] Step 6: Build DAX measures
-
-## Technical Details
-- Visual Studio 2022
-- Analysis Services Projects Extension
-- SQL Server 2022 Analysis Services (Tabular)
+- [ ] Step 4: Create Date Hierarchy
+- [ ] Step 5: Organize columns (Display Folders, Hide technical columns)
+- [ ] Step 6: Create DAX Measures
+- [ ] Step 7: Mark Date Table
 
 ---
-**Created:** December 2025  
 **Last Updated:** December 2025  
-**Status:** In Progress - Step 1 Complete
-```
-
-5. پایین صفحه در **"Commit changes"**:
-   - Title: `Phase 6 - Step 1: SSAS Tabular project setup`
-   - Description (optional):
-```
-     - Created Analysis Services Tabular Project
-     - Compatibility Level: 1600 (SQL Server 2022)
-     - Integrated Workspace configured
-     - Build successful
+**Status:** In Progress - Steps 1-3 Complete
