@@ -3,6 +3,679 @@
   "compatibilityLevel": 1600,
   "model": {
     "culture": "en-US",
+    "dataSources": [
+      {
+        "type": "structured",
+        "name": "SQL/SOHEILT;BankingDW",
+        "connectionDetails": {
+          "protocol": "tds",
+          "address": {
+            "server": "SOHEILT",
+            "database": "BankingDW"
+          },
+          "authentication": null,
+          "query": null
+        },
+        "credential": {
+          "AuthenticationKind": "ServiceAccount",
+          "kind": "SQL",
+          "path": "soheilt;BankingDW",
+          "EncryptConnection": false
+        }
+      }
+    ],
+    "tables": [
+      {
+        "name": "DW Dim_Customer",
+        "columns": [
+          {
+            "name": "CustomerKey",
+            "dataType": "int64",
+            "sourceColumn": "CustomerKey"
+          },
+          {
+            "name": "CustomerID",
+            "dataType": "string",
+            "sourceColumn": "CustomerID"
+          },
+          {
+            "name": "DateOfBirth",
+            "dataType": "dateTime",
+            "sourceColumn": "DateOfBirth"
+          },
+          {
+            "name": "Age",
+            "dataType": "int64",
+            "sourceColumn": "Age"
+          },
+          {
+            "name": "AgeGroup",
+            "dataType": "string",
+            "sourceColumn": "AgeGroup"
+          },
+          {
+            "name": "Gender",
+            "dataType": "string",
+            "sourceColumn": "Gender"
+          },
+          {
+            "name": "Location",
+            "dataType": "string",
+            "sourceColumn": "Location"
+          },
+          {
+            "name": "LocationKey",
+            "dataType": "int64",
+            "sourceColumn": "LocationKey"
+          },
+          {
+            "name": "CustomerType",
+            "dataType": "string",
+            "sourceColumn": "CustomerType"
+          },
+          {
+            "name": "FirstTransactionDate",
+            "dataType": "dateTime",
+            "sourceColumn": "FirstTransactionDate"
+          },
+          {
+            "name": "StartDate",
+            "dataType": "dateTime",
+            "sourceColumn": "StartDate"
+          },
+          {
+            "name": "EndDate",
+            "dataType": "dateTime",
+            "sourceColumn": "EndDate"
+          },
+          {
+            "name": "IsCurrent",
+            "dataType": "boolean",
+            "sourceColumn": "IsCurrent"
+          },
+          {
+            "name": "CreatedDate",
+            "dataType": "dateTime",
+            "sourceColumn": "CreatedDate"
+          },
+          {
+            "name": "ModifiedDate",
+            "dataType": "dateTime",
+            "sourceColumn": "ModifiedDate"
+          }
+        ],
+        "partitions": [
+          {
+            "name": "Partition",
+            "dataView": "full",
+            "source": {
+              "type": "m",
+              "expression": [
+                "let",
+                "    Source = #\"SQL/SOHEILT;BankingDW\",",
+                "    DW_Dim_Customer = Source{[Schema=\"DW\",Item=\"Dim_Customer\"]}[Data]",
+                "in",
+                "    DW_Dim_Customer"
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "name": "DW Dim_Date",
+        "columns": [
+          {
+            "name": "DateKey",
+            "dataType": "int64",
+            "sourceColumn": "DateKey"
+          },
+          {
+            "name": "FullDateTime",
+            "dataType": "dateTime",
+            "sourceColumn": "FullDateTime"
+          },
+          {
+            "name": "Date",
+            "dataType": "dateTime",
+            "sourceColumn": "Date"
+          },
+          {
+            "name": "Year",
+            "dataType": "int64",
+            "sourceColumn": "Year"
+          },
+          {
+            "name": "YearName",
+            "dataType": "string",
+            "sourceColumn": "YearName"
+          },
+          {
+            "name": "Quarter",
+            "dataType": "int64",
+            "sourceColumn": "Quarter"
+          },
+          {
+            "name": "QuarterName",
+            "dataType": "string",
+            "sourceColumn": "QuarterName"
+          },
+          {
+            "name": "YearQuarter",
+            "dataType": "string",
+            "sourceColumn": "YearQuarter"
+          },
+          {
+            "name": "Month",
+            "dataType": "int64",
+            "sourceColumn": "Month"
+          },
+          {
+            "name": "MonthName",
+            "dataType": "string",
+            "sourceColumn": "MonthName"
+          },
+          {
+            "name": "MonthNameShort",
+            "dataType": "string",
+            "sourceColumn": "MonthNameShort"
+          },
+          {
+            "name": "YearMonth",
+            "dataType": "string",
+            "sourceColumn": "YearMonth"
+          },
+          {
+            "name": "YearMonthName",
+            "dataType": "string",
+            "sourceColumn": "YearMonthName"
+          },
+          {
+            "name": "Day",
+            "dataType": "int64",
+            "sourceColumn": "Day"
+          },
+          {
+            "name": "DayOfWeek",
+            "dataType": "int64",
+            "sourceColumn": "DayOfWeek"
+          },
+          {
+            "name": "DayName",
+            "dataType": "string",
+            "sourceColumn": "DayName"
+          },
+          {
+            "name": "DayNameShort",
+            "dataType": "string",
+            "sourceColumn": "DayNameShort"
+          },
+          {
+            "name": "DayOfYear",
+            "dataType": "int64",
+            "sourceColumn": "DayOfYear"
+          },
+          {
+            "name": "WeekOfYear",
+            "dataType": "int64",
+            "sourceColumn": "WeekOfYear"
+          },
+          {
+            "name": "WeekOfMonth",
+            "dataType": "int64",
+            "sourceColumn": "WeekOfMonth"
+          },
+          {
+            "name": "FiscalYear",
+            "dataType": "int64",
+            "sourceColumn": "FiscalYear"
+          },
+          {
+            "name": "FiscalQuarter",
+            "dataType": "int64",
+            "sourceColumn": "FiscalQuarter"
+          },
+          {
+            "name": "FiscalMonth",
+            "dataType": "int64",
+            "sourceColumn": "FiscalMonth"
+          },
+          {
+            "name": "Time",
+            "dataType": "dateTime",
+            "sourceColumn": "Time"
+          },
+          {
+            "name": "Hour",
+            "dataType": "int64",
+            "sourceColumn": "Hour"
+          },
+          {
+            "name": "HourName",
+            "dataType": "string",
+            "sourceColumn": "HourName"
+          },
+          {
+            "name": "Minute",
+            "dataType": "int64",
+            "sourceColumn": "Minute"
+          },
+          {
+            "name": "TimeOfDay",
+            "dataType": "string",
+            "sourceColumn": "TimeOfDay"
+          },
+          {
+            "name": "IsWeekend",
+            "dataType": "boolean",
+            "sourceColumn": "IsWeekend"
+          },
+          {
+            "name": "IsHoliday",
+            "dataType": "boolean",
+            "sourceColumn": "IsHoliday"
+          },
+          {
+            "name": "IsWorkingDay",
+            "dataType": "boolean",
+            "sourceColumn": "IsWorkingDay"
+          },
+          {
+            "name": "IsToday",
+            "dataType": "boolean",
+            "sourceColumn": "IsToday"
+          },
+          {
+            "name": "IsYesterday",
+            "dataType": "boolean",
+            "sourceColumn": "IsYesterday"
+          },
+          {
+            "name": "IsCurrentMonth",
+            "dataType": "boolean",
+            "sourceColumn": "IsCurrentMonth"
+          },
+          {
+            "name": "IsCurrentQuarter",
+            "dataType": "boolean",
+            "sourceColumn": "IsCurrentQuarter"
+          },
+          {
+            "name": "IsCurrentYear",
+            "dataType": "boolean",
+            "sourceColumn": "IsCurrentYear"
+          },
+          {
+            "name": "CreatedDate",
+            "dataType": "dateTime",
+            "sourceColumn": "CreatedDate"
+          }
+        ],
+        "partitions": [
+          {
+            "name": "Partition",
+            "dataView": "full",
+            "source": {
+              "type": "m",
+              "expression": [
+                "let",
+                "    Source = #\"SQL/SOHEILT;BankingDW\",",
+                "    DW_Dim_Date = Source{[Schema=\"DW\",Item=\"Dim_Date\"]}[Data]",
+                "in",
+                "    DW_Dim_Date"
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "name": "DW Dim_Location",
+        "columns": [
+          {
+            "name": "LocationKey",
+            "dataType": "int64",
+            "sourceColumn": "LocationKey"
+          },
+          {
+            "name": "LocationCode",
+            "dataType": "string",
+            "sourceColumn": "LocationCode"
+          },
+          {
+            "name": "LocationName",
+            "dataType": "string",
+            "sourceColumn": "LocationName"
+          },
+          {
+            "name": "City",
+            "dataType": "string",
+            "sourceColumn": "City"
+          },
+          {
+            "name": "State",
+            "dataType": "string",
+            "sourceColumn": "State"
+          },
+          {
+            "name": "Country",
+            "dataType": "string",
+            "sourceColumn": "Country"
+          },
+          {
+            "name": "Region",
+            "dataType": "string",
+            "sourceColumn": "Region"
+          },
+          {
+            "name": "Latitude",
+            "dataType": "double",
+            "sourceColumn": "Latitude"
+          },
+          {
+            "name": "Longitude",
+            "dataType": "double",
+            "sourceColumn": "Longitude"
+          },
+          {
+            "name": "LocationType",
+            "dataType": "string",
+            "sourceColumn": "LocationType"
+          },
+          {
+            "name": "CreatedDate",
+            "dataType": "dateTime",
+            "sourceColumn": "CreatedDate"
+          },
+          {
+            "name": "ModifiedDate",
+            "dataType": "dateTime",
+            "sourceColumn": "ModifiedDate"
+          }
+        ],
+        "partitions": [
+          {
+            "name": "Partition",
+            "dataView": "full",
+            "source": {
+              "type": "m",
+              "expression": [
+                "let",
+                "    Source = #\"SQL/SOHEILT;BankingDW\",",
+                "    DW_Dim_Location = Source{[Schema=\"DW\",Item=\"Dim_Location\"]}[Data]",
+                "in",
+                "    DW_Dim_Location"
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "name": "DW Dim_Segment",
+        "columns": [
+          {
+            "name": "SegmentKey",
+            "dataType": "int64",
+            "sourceColumn": "SegmentKey"
+          },
+          {
+            "name": "SegmentCode",
+            "dataType": "string",
+            "sourceColumn": "SegmentCode"
+          },
+          {
+            "name": "SegmentName",
+            "dataType": "string",
+            "sourceColumn": "SegmentName"
+          },
+          {
+            "name": "SegmentType",
+            "dataType": "string",
+            "sourceColumn": "SegmentType"
+          },
+          {
+            "name": "Description",
+            "dataType": "string",
+            "sourceColumn": "Description"
+          },
+          {
+            "name": "RecencyMin",
+            "dataType": "int64",
+            "sourceColumn": "RecencyMin"
+          },
+          {
+            "name": "RecencyMax",
+            "dataType": "int64",
+            "sourceColumn": "RecencyMax"
+          },
+          {
+            "name": "FrequencyMin",
+            "dataType": "int64",
+            "sourceColumn": "FrequencyMin"
+          },
+          {
+            "name": "FrequencyMax",
+            "dataType": "int64",
+            "sourceColumn": "FrequencyMax"
+          },
+          {
+            "name": "DisplayOrder",
+            "dataType": "int64",
+            "sourceColumn": "DisplayOrder"
+          },
+          {
+            "name": "Color",
+            "dataType": "string",
+            "sourceColumn": "Color"
+          },
+          {
+            "name": "IsActive",
+            "dataType": "boolean",
+            "sourceColumn": "IsActive"
+          },
+          {
+            "name": "StartDate",
+            "dataType": "dateTime",
+            "sourceColumn": "StartDate"
+          },
+          {
+            "name": "EndDate",
+            "dataType": "dateTime",
+            "sourceColumn": "EndDate"
+          },
+          {
+            "name": "CreatedDate",
+            "dataType": "dateTime",
+            "sourceColumn": "CreatedDate"
+          },
+          {
+            "name": "ModifiedDate",
+            "dataType": "dateTime",
+            "sourceColumn": "ModifiedDate"
+          }
+        ],
+        "partitions": [
+          {
+            "name": "Partition",
+            "dataView": "full",
+            "source": {
+              "type": "m",
+              "expression": [
+                "let",
+                "    Source = #\"SQL/SOHEILT;BankingDW\",",
+                "    DW_Dim_Segment = Source{[Schema=\"DW\",Item=\"Dim_Segment\"]}[Data]",
+                "in",
+                "    DW_Dim_Segment"
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "name": "DW Fact_CustomerSnapshot",
+        "columns": [
+          {
+            "name": "SnapshotKey",
+            "dataType": "int64",
+            "sourceColumn": "SnapshotKey"
+          },
+          {
+            "name": "CustomerKey",
+            "dataType": "int64",
+            "sourceColumn": "CustomerKey"
+          },
+          {
+            "name": "DateKey",
+            "dataType": "int64",
+            "sourceColumn": "DateKey"
+          },
+          {
+            "name": "SegmentKey",
+            "dataType": "int64",
+            "sourceColumn": "SegmentKey"
+          },
+          {
+            "name": "TransactionCount",
+            "dataType": "int64",
+            "sourceColumn": "TransactionCount"
+          },
+          {
+            "name": "TotalTransactionAmount",
+            "dataType": "double",
+            "sourceColumn": "TotalTransactionAmount"
+          },
+          {
+            "name": "AvgTransactionAmount",
+            "dataType": "double",
+            "sourceColumn": "AvgTransactionAmount"
+          },
+          {
+            "name": "MinTransactionAmount",
+            "dataType": "double",
+            "sourceColumn": "MinTransactionAmount"
+          },
+          {
+            "name": "MaxTransactionAmount",
+            "dataType": "double",
+            "sourceColumn": "MaxTransactionAmount"
+          },
+          {
+            "name": "DaysSinceLastTransaction",
+            "dataType": "int64",
+            "sourceColumn": "DaysSinceLastTransaction"
+          },
+          {
+            "name": "RecencyScore",
+            "dataType": "int64",
+            "sourceColumn": "RecencyScore"
+          },
+          {
+            "name": "FrequencyScore",
+            "dataType": "int64",
+            "sourceColumn": "FrequencyScore"
+          },
+          {
+            "name": "LoyaltyScore",
+            "dataType": "double",
+            "sourceColumn": "LoyaltyScore"
+          },
+          {
+            "name": "SatisfactionScore",
+            "dataType": "double",
+            "sourceColumn": "SatisfactionScore"
+          },
+          {
+            "name": "ComplaintFlag",
+            "dataType": "boolean",
+            "sourceColumn": "ComplaintFlag"
+          },
+          {
+            "name": "ChurnFlag",
+            "dataType": "boolean",
+            "sourceColumn": "ChurnFlag"
+          },
+          {
+            "name": "AtRiskFlag",
+            "dataType": "boolean",
+            "sourceColumn": "AtRiskFlag"
+          },
+          {
+            "name": "TrendCategory",
+            "dataType": "string",
+            "sourceColumn": "TrendCategory"
+          },
+          {
+            "name": "PreviousMonthTransactionCount",
+            "dataType": "int64",
+            "sourceColumn": "PreviousMonthTransactionCount"
+          },
+          {
+            "name": "GrowthRate",
+            "dataType": "double",
+            "sourceColumn": "GrowthRate"
+          },
+          {
+            "name": "FinalAccountBalance",
+            "dataType": "double",
+            "sourceColumn": "FinalAccountBalance"
+          },
+          {
+            "name": "ETLLoadDate",
+            "dataType": "dateTime",
+            "sourceColumn": "ETLLoadDate"
+          },
+          {
+            "name": "ETLBatchID",
+            "dataType": "int64",
+            "sourceColumn": "ETLBatchID"
+          }
+        ],
+        "partitions": [
+          {
+            "name": "Partition",
+            "dataView": "full",
+            "source": {
+              "type": "m",
+              "expression": [
+                "let",
+                "    Source = #\"SQL/SOHEILT;BankingDW\",",
+                "    DW_Fact_CustomerSnapshot = Source{[Schema=\"DW\",Item=\"Fact_CustomerSnapshot\"]}[Data]",
+                "in",
+                "    DW_Fact_CustomerSnapshot"
+              ]
+            }
+          }
+        ]
+      }
+    ],
+    "relationships": [
+      {
+        "name": "2746f1c7-d632-4aad-a01c-878b1b4ea868",
+        "fromTable": "DW Dim_Customer",
+        "fromColumn": "LocationKey",
+        "toTable": "DW Dim_Location",
+        "toColumn": "LocationKey"
+      },
+      {
+        "name": "e2c91893-a76c-4c33-ba39-0fdac02899a4",
+        "fromTable": "DW Fact_CustomerSnapshot",
+        "fromColumn": "CustomerKey",
+        "toTable": "DW Dim_Customer",
+        "toColumn": "CustomerKey"
+      },
+      {
+        "name": "8c36f21f-1eaa-4f45-a8d3-80e654729f09",
+        "fromTable": "DW Fact_CustomerSnapshot",
+        "fromColumn": "DateKey",
+        "toTable": "DW Dim_Date",
+        "toColumn": "DateKey"
+      },
+      {
+        "name": "16cfbf4d-f5e1-4cd6-b0c9-6f3e11d6062a",
+        "fromTable": "DW Fact_CustomerSnapshot",
+        "fromColumn": "SegmentKey",
+        "toTable": "DW Dim_Segment",
+        "toColumn": "SegmentKey"
+      }
+    ],
     "annotations": [
       {
         "name": "ClientCompatibilityLevel",
