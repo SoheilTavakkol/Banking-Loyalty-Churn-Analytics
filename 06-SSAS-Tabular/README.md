@@ -1,7 +1,7 @@
 # Phase 6: SSAS Tabular Model
 
 ## Status
-✅ **Steps 1-4 Complete:** Project Setup, Data Source, Tables Imported, Model Organization
+✅ **Steps 1-5 Complete:** Project Setup, Data Source, Tables Imported, Model Organization, Display Folders
 
 ## Project Information
 - **Model Name:** BankingTabularModel
@@ -26,7 +26,7 @@
 **All relationships:** Active, Single direction, Many-to-One cardinality
 
 ## Model Organization
-✅ **Step 4 Complete:** Date Hierarchy & Column Management
+✅ **Steps 4-5 Complete:** Date Hierarchy, Column Management & Display Folders
 
 ### Date Table Configuration
 - Dim_Date marked as Date Table (Date column)
@@ -41,12 +41,10 @@
 - Only business-relevant columns visible to end users
 
 ## Next Steps
-- [ ] Step 5: Create Display Folders for better organization
 - [ ] Step 6: Create DAX Measures (15+ KPIs)
 - [ ] Step 7: Format columns (currency, percentage, dates)
 - [ ] Step 8: Test and validate measures
-- [ ] Step 9: Deploy to production server
 
 ---
 **Last Updated:** December 2025  
-**Status:** In Progress - Steps 1-4 Complete
+**Status:** In Progress - Steps 1-5 Complete
