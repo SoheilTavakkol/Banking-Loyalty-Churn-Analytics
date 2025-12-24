@@ -1,7 +1,7 @@
 # Phase 6: SSAS Tabular Model
 
 ## Status
-✅ **Steps 1-3 Complete:** Project Setup, Data Source, Tables Imported
+✅ **Steps 1-4 Complete:** Project Setup, Data Source, Tables Imported, Model Organization
 
 ## Project Information
 - **Model Name:** BankingTabularModel
@@ -25,12 +25,28 @@
 
 **All relationships:** Active, Single direction, Many-to-One cardinality
 
+## Model Organization
+✅ **Step 4 Complete:** Date Hierarchy & Column Management
+
+### Date Table Configuration
+- Dim_Date marked as Date Table (Date column)
+- **Calendar Hierarchy** created:
+  - Year → Quarter → Month → Date
+- Technical columns hidden (DateKey, redundant fields)
+
+### Column Visibility
+- All surrogate keys hidden (CustomerKey, LocationKey, etc.)
+- SCD metadata hidden (StartDate, EndDate, IsCurrent)
+- ETL audit columns hidden (ETLLoadDate, ETLBatchID)
+- Only business-relevant columns visible to end users
+
 ## Next Steps
-- [ ] Step 4: Create Date Hierarchy
-- [ ] Step 5: Organize columns (Display Folders, Hide technical columns)
-- [ ] Step 6: Create DAX Measures
-- [ ] Step 7: Mark Date Table
+- [ ] Step 5: Create Display Folders for better organization
+- [ ] Step 6: Create DAX Measures (15+ KPIs)
+- [ ] Step 7: Format columns (currency, percentage, dates)
+- [ ] Step 8: Test and validate measures
+- [ ] Step 9: Deploy to production server
 
 ---
 **Last Updated:** December 2025  
-**Status:** In Progress - Steps 1-3 Complete
+**Status:** In Progress - Steps 1-4 Complete
