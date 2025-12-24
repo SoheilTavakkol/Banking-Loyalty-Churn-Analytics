@@ -42,27 +42,32 @@
           {
             "name": "DateOfBirth",
             "dataType": "dateTime",
-            "sourceColumn": "DateOfBirth"
+            "sourceColumn": "DateOfBirth",
+            "displayFolder": "Demographics"
           },
           {
             "name": "Age",
             "dataType": "int64",
-            "sourceColumn": "Age"
+            "sourceColumn": "Age",
+            "displayFolder": "Demographics"
           },
           {
             "name": "AgeGroup",
             "dataType": "string",
-            "sourceColumn": "AgeGroup"
+            "sourceColumn": "AgeGroup",
+            "displayFolder": "Demographics"
           },
           {
             "name": "Gender",
             "dataType": "string",
-            "sourceColumn": "Gender"
+            "sourceColumn": "Gender",
+            "displayFolder": "Demographics"
           },
           {
             "name": "Location",
             "dataType": "string",
-            "sourceColumn": "Location"
+            "sourceColumn": "Location",
+            "displayFolder": "Location"
           },
           {
             "name": "LocationKey",
@@ -136,18 +141,21 @@
             "name": "DateKey",
             "dataType": "int64",
             "isHidden": true,
-            "sourceColumn": "DateKey"
+            "sourceColumn": "DateKey",
+            "displayFolder": "Date Attributes"
           },
           {
             "name": "FullDateTime",
             "dataType": "dateTime",
-            "sourceColumn": "FullDateTime"
+            "sourceColumn": "FullDateTime",
+            "displayFolder": "Time Attributes"
           },
           {
             "name": "Date",
             "dataType": "dateTime",
             "isKey": true,
-            "sourceColumn": "Date"
+            "sourceColumn": "Date",
+            "displayFolder": "Date Attributes"
           },
           {
             "name": "Year",
@@ -188,7 +196,8 @@
           {
             "name": "MonthName",
             "dataType": "string",
-            "sourceColumn": "MonthName"
+            "sourceColumn": "MonthName",
+            "displayFolder": "Date Attributes"
           },
           {
             "name": "MonthNameShort",
@@ -216,12 +225,14 @@
           {
             "name": "DayOfWeek",
             "dataType": "int64",
-            "sourceColumn": "DayOfWeek"
+            "sourceColumn": "DayOfWeek",
+            "displayFolder": "Date Attributes"
           },
           {
             "name": "DayName",
             "dataType": "string",
-            "sourceColumn": "DayName"
+            "sourceColumn": "DayName",
+            "displayFolder": "Date Attributes"
           },
           {
             "name": "DayNameShort",
@@ -268,12 +279,14 @@
           {
             "name": "Time",
             "dataType": "dateTime",
-            "sourceColumn": "Time"
+            "sourceColumn": "Time",
+            "displayFolder": "Time Attributes"
           },
           {
             "name": "Hour",
             "dataType": "int64",
-            "sourceColumn": "Hour"
+            "sourceColumn": "Hour",
+            "displayFolder": "Time Attributes"
           },
           {
             "name": "HourName",
@@ -284,27 +297,32 @@
           {
             "name": "Minute",
             "dataType": "int64",
-            "sourceColumn": "Minute"
+            "sourceColumn": "Minute",
+            "displayFolder": "Time Attributes"
           },
           {
             "name": "TimeOfDay",
             "dataType": "string",
-            "sourceColumn": "TimeOfDay"
+            "sourceColumn": "TimeOfDay",
+            "displayFolder": "Time Attributes"
           },
           {
             "name": "IsWeekend",
             "dataType": "boolean",
-            "sourceColumn": "IsWeekend"
+            "sourceColumn": "IsWeekend",
+            "displayFolder": "Flags"
           },
           {
             "name": "IsHoliday",
             "dataType": "boolean",
-            "sourceColumn": "IsHoliday"
+            "sourceColumn": "IsHoliday",
+            "displayFolder": "Flags"
           },
           {
             "name": "IsWorkingDay",
             "dataType": "boolean",
-            "sourceColumn": "IsWorkingDay"
+            "sourceColumn": "IsWorkingDay",
+            "displayFolder": "Flags"
           },
           {
             "name": "IsToday",
@@ -410,22 +428,26 @@
           {
             "name": "City",
             "dataType": "string",
-            "sourceColumn": "City"
+            "sourceColumn": "City",
+            "displayFolder": "Geography"
           },
           {
             "name": "State",
             "dataType": "string",
-            "sourceColumn": "State"
+            "sourceColumn": "State",
+            "displayFolder": "Geography"
           },
           {
             "name": "Country",
             "dataType": "string",
-            "sourceColumn": "Country"
+            "sourceColumn": "Country",
+            "displayFolder": "Geography"
           },
           {
             "name": "Region",
             "dataType": "string",
-            "sourceColumn": "Region"
+            "sourceColumn": "Region",
+            "displayFolder": "Geography"
           },
           {
             "name": "Latitude",
@@ -502,27 +524,32 @@
           {
             "name": "Description",
             "dataType": "string",
-            "sourceColumn": "Description"
+            "sourceColumn": "Description",
+            "displayFolder": "Segmentation Rules"
           },
           {
             "name": "RecencyMin",
             "dataType": "int64",
-            "sourceColumn": "RecencyMin"
+            "sourceColumn": "RecencyMin",
+            "displayFolder": "Segmentation Rules"
           },
           {
             "name": "RecencyMax",
             "dataType": "int64",
-            "sourceColumn": "RecencyMax"
+            "sourceColumn": "RecencyMax",
+            "displayFolder": "Segmentation Rules"
           },
           {
             "name": "FrequencyMin",
             "dataType": "int64",
-            "sourceColumn": "FrequencyMin"
+            "sourceColumn": "FrequencyMin",
+            "displayFolder": "Segmentation Rules"
           },
           {
             "name": "FrequencyMax",
             "dataType": "int64",
-            "sourceColumn": "FrequencyMax"
+            "sourceColumn": "FrequencyMax",
+            "displayFolder": "Segmentation Rules"
           },
           {
             "name": "DisplayOrder",
@@ -611,82 +638,98 @@
           {
             "name": "TransactionCount",
             "dataType": "int64",
-            "sourceColumn": "TransactionCount"
+            "sourceColumn": "TransactionCount",
+            "displayFolder": "Transaction Metrics"
           },
           {
             "name": "TotalTransactionAmount",
             "dataType": "double",
-            "sourceColumn": "TotalTransactionAmount"
+            "sourceColumn": "TotalTransactionAmount",
+            "displayFolder": "Transaction Metrics"
           },
           {
             "name": "AvgTransactionAmount",
             "dataType": "double",
-            "sourceColumn": "AvgTransactionAmount"
+            "sourceColumn": "AvgTransactionAmount",
+            "displayFolder": "Transaction Metrics"
           },
           {
             "name": "MinTransactionAmount",
             "dataType": "double",
-            "sourceColumn": "MinTransactionAmount"
+            "sourceColumn": "MinTransactionAmount",
+            "displayFolder": "Transaction Metrics"
           },
           {
             "name": "MaxTransactionAmount",
             "dataType": "double",
-            "sourceColumn": "MaxTransactionAmount"
+            "sourceColumn": "MaxTransactionAmount",
+            "displayFolder": "Transaction Metrics"
           },
           {
             "name": "DaysSinceLastTransaction",
             "dataType": "int64",
-            "sourceColumn": "DaysSinceLastTransaction"
+            "sourceColumn": "DaysSinceLastTransaction",
+            "displayFolder": "RF Analysis"
           },
           {
             "name": "RecencyScore",
             "dataType": "int64",
-            "sourceColumn": "RecencyScore"
+            "sourceColumn": "RecencyScore",
+            "displayFolder": "RF Analysis"
           },
           {
             "name": "FrequencyScore",
             "dataType": "int64",
-            "sourceColumn": "FrequencyScore"
+            "sourceColumn": "FrequencyScore",
+            "displayFolder": "RF Analysis"
           },
           {
             "name": "LoyaltyScore",
             "dataType": "double",
-            "sourceColumn": "LoyaltyScore"
+            "sourceColumn": "LoyaltyScore",
+            "displayFolder": "RF Analysis"
           },
           {
             "name": "SatisfactionScore",
             "dataType": "double",
-            "sourceColumn": "SatisfactionScore"
+            "sourceColumn": "SatisfactionScore",
+            "displayFolder": "Customer Behavior"
           },
           {
             "name": "ComplaintFlag",
             "dataType": "boolean",
-            "sourceColumn": "ComplaintFlag"
+            "sourceColumn": "ComplaintFlag",
+            "displayFolder": "Customer Behavior"
           },
           {
             "name": "ChurnFlag",
             "dataType": "boolean",
-            "sourceColumn": "ChurnFlag"
+            "sourceColumn": "ChurnFlag",
+            "displayFolder": "Churn & Risk"
           },
           {
             "name": "AtRiskFlag",
             "dataType": "boolean",
-            "sourceColumn": "AtRiskFlag"
+            "sourceColumn": "AtRiskFlag",
+            "displayFolder": "Churn & Risk"
           },
           {
             "name": "TrendCategory",
             "dataType": "string",
-            "sourceColumn": "TrendCategory"
+            "sourceColumn": "TrendCategory",
+            "displayFolder": "Trend Analysis"
           },
           {
             "name": "PreviousMonthTransactionCount",
             "dataType": "int64",
-            "sourceColumn": "PreviousMonthTransactionCount"
+            "sourceColumn": "PreviousMonthTransactionCount",
+            "displayFolder": "Trend Analysis"
           },
           {
             "name": "GrowthRate",
             "dataType": "double",
-            "sourceColumn": "GrowthRate"
+            "sourceColumn": "GrowthRate",
+            "displayFolder": "Trend Analysis"
           },
           {
             "name": "FinalAccountBalance",
