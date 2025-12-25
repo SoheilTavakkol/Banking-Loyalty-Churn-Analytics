@@ -18,7 +18,7 @@ Banks need to identify at-risk customers before they churn and understand what d
 
 | Component | Technology |
 |-----------|-----------|
-| Database | Microsoft SQL Server 2019 |
+| Database | Microsoft SQL Server 2019+ |
 | ETL | SQL Server Integration Services (SSIS) |
 | Staging Layer | SQL Server (BankingStaging) |
 | Data Warehouse | SQL Server (Star Schema - BankingDW) |
@@ -72,8 +72,11 @@ Banking-Loyalty-Churn-Analytics/
 │   │   └── Package 5 - CustomerSnapshot      ✅ COMPLETED
 │   └── README.md
 │
-├── 06-SSAS-Tabular/                          ✅ Phase 6 - Step 1 Complete
-│   └── Banking-Tabular-Model.bim
+├── 06-SSAS-Tabular/                          ✅ Phase 6 - Steps 1-5 Complete
+│   └── BankingTabularModel/
+│       ├── Model.bim
+│       ├── BankingTabularModel.sln
+│       └── BankingTabularModel.smproj
 │
 ├── 07-PowerBI-Dashboards/                    ⏳ Phase 7
 │   ├── Executive-Dashboard.pbix
@@ -335,10 +338,18 @@ Created separate `BankingStaging` database (Enterprise best practice):
 
 ---
 
-**✅ Phase 6: OLAP Cube (In Progress - Step 1 Complete)**
-- Project setup completed
-- Compatibility Level: 1600 (SQL Server 2022)
-- Next: Data source connection
+**✅ Phase 6: OLAP Cube (In Progress - Steps 1-5 Complete)**
+
+**Completed:**
+- ✅ Project setup (Compatibility Level: 1600 - SQL Server 2022)
+- ✅ Data source connection (SOHEILT;BankingDW)
+- ✅ Tables imported (5 tables: Dim_Date, Dim_Customer, Dim_Location, Dim_Segment, Fact_CustomerSnapshot)
+- ✅ Relationships created (4 relationships - all Many-to-One, Single direction)
+- ✅ Calendar hierarchy (Year → Quarter → Month → Date)
+- ✅ Display Folders configured for better organization
+- ✅ Technical columns hidden (keys, SCD metadata, audit fields)
+
+**Next:** DAX Measures creation (15+ KPIs)
 
 **Deliverables:**
 - SSAS Tabular model with relationships
@@ -452,16 +463,19 @@ This project demonstrates proficiency in:
 - SSIS package development (staging and dimension layers)
 - ETL performance optimization (bulk insert, parallel processing)
 - Data validation frameworks
-- **SCD Type 2 implementation in ETL** (Hybrid approach: SSIS + Stored Procedures)
-- **NULL handling strategies** (default values, data quality flagging)
-- **Performance tuning** (temp tables, indexing, set-based operations)
-- **Stored Procedure development** for complex transformations
+- SCD Type 2 implementation in ETL (Hybrid approach: SSIS + Stored Procedures)
+- NULL handling strategies (default values, data quality flagging)
+- Performance tuning (temp tables, indexing, set-based operations)
+- Stored Procedure development for complex transformations
 - Complex transformation logic (RF calculations)
 - Fact table loading with dimension lookups
 - Complex transformation logic (RF calculations)
 - Monthly aggregation fact tables
 - Multi-stage ETL pipelines with Stored Procedures
 - Global temp table management in SQL Server
+- SSAS Tabular model development (structure, relationships, hierarchies)
+- Display Folders and column organization
+- Marking Date tables for Time Intelligence
 
 ### ⏳ Upcoming:
 - OLAP cube development with SSAS Tabular
@@ -529,9 +543,7 @@ python generate_extended_transactions.py
 - Data Modeling: ✅ 100%
 - Data Augmentation: ✅ 100%
 - ETL Development: ✅ 100% (All 5 packages complete)
-- OLAP: ⏳ 0%
-- Visualization: ⏳ 0%
-- Testing: ⏳ 0%
+- OLAP: 🔄 50% (Model structure complete, measures pending)
 
 ---
 
