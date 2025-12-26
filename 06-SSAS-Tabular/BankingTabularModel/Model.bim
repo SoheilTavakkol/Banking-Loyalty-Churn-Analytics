@@ -764,6 +764,312 @@
               ]
             }
           }
+        ],
+        "measures": [
+          {
+            "name": "Total Customers",
+            "expression": [
+              " ",
+              "DISTINCTCOUNT('DW Dim_Customer'[CustomerID])"
+            ],
+            "formatString": "#,0"
+          },
+          {
+            "name": "Avg Transaction Frequency",
+            "expression": [
+              " ",
+              "AVERAGE('DW Fact_CustomerSnapshot'[TransactionCount])"
+            ],
+            "formatString": "#,0.00"
+          },
+          {
+            "name": "Active Customers",
+            "expression": [
+              " ",
+              "VAR MaxDateInData = ",
+              "    CALCULATE(",
+              "        MAX('DW Fact_CustomerSnapshot'[DateKey]),",
+              "        REMOVEFILTERS('DW Dim_Date')",
+              "    )",
+              "RETURN",
+              "CALCULATE(",
+              "    DISTINCTCOUNT('DW Fact_CustomerSnapshot'[CustomerKey]),",
+              "    'DW Fact_CustomerSnapshot'[DaysSinceLastTransaction] <= 30,",
+              "    'DW Fact_CustomerSnapshot'[DateKey] = MaxDateInData",
+              ")"
+            ],
+            "formatString": "#,0"
+          },
+          {
+            "name": "Active Customer Rate",
+            "expression": [
+              " ",
+              "DIVIDE([Active Customers], [Total Customers], 0)"
+            ],
+            "formatString": "0.00%;-0.00%;0.00%"
+          },
+          {
+            "name": "Churned Customers",
+            "expression": [
+              " ",
+              "VAR MaxDateInData = ",
+              "    CALCULATE(",
+              "        MAX('DW Fact_CustomerSnapshot'[DateKey]),",
+              "        REMOVEFILTERS('DW Dim_Date')",
+              "    )",
+              "RETURN",
+              "CALCULATE(",
+              "    DISTINCTCOUNT('DW Fact_CustomerSnapshot'[CustomerKey]),",
+              "    'DW Fact_CustomerSnapshot'[ChurnFlag] = TRUE,",
+              "    'DW Fact_CustomerSnapshot'[DateKey] = MaxDateInData",
+              ")"
+            ],
+            "formatString": "#,0"
+          },
+          {
+            "name": "Churn Rate",
+            "expression": [
+              " ",
+              "DIVIDE([Churned Customers], [Total Customers], 0)"
+            ],
+            "formatString": "0.00%;-0.00%;0.00%"
+          },
+          {
+            "name": "Retention Rate",
+            "expression": " 1 - [Churn Rate]",
+            "formatString": "0.00%;-0.00%;0.00%"
+          },
+          {
+            "name": "At-Risk Customers",
+            "expression": [
+              " ",
+              "VAR MaxDateInData = ",
+              "    CALCULATE(",
+              "        MAX('DW Fact_CustomerSnapshot'[DateKey]),",
+              "        REMOVEFILTERS()",
+              "    )",
+              "VAR Result = ",
+              "    CALCULATE(",
+              "        DISTINCTCOUNT('DW Fact_CustomerSnapshot'[CustomerKey]),",
+              "        'DW Fact_CustomerSnapshot'[DaysSinceLastTransaction] > 60,",
+              "        'DW Fact_CustomerSnapshot'[DaysSinceLastTransaction] <= 90,",
+              "        'DW Fact_CustomerSnapshot'[DateKey] = MaxDateInData",
+              "    )",
+              "RETURN",
+              "IF(ISBLANK(Result), 0, Result)"
+            ],
+            "formatString": "#,0"
+          },
+          {
+            "name": "Avg Loyalty Score",
+            "expression": [
+              " ",
+              "VAR MaxDateInData = ",
+              "    CALCULATE(",
+              "        MAX('DW Fact_CustomerSnapshot'[DateKey]),",
+              "        REMOVEFILTERS('DW Dim_Date')",
+              "    )",
+              "RETURN",
+              "CALCULATE(",
+              "    AVERAGE('DW Fact_CustomerSnapshot'[LoyaltyScore]),",
+              "    'DW Fact_CustomerSnapshot'[DateKey] = MaxDateInData",
+              ")"
+            ],
+            "formatString": "#,0.00"
+          },
+          {
+            "name": "Avg Satisfaction Score",
+            "expression": [
+              " ",
+              "VAR MaxDateInData = ",
+              "    CALCULATE(",
+              "        MAX('DW Fact_CustomerSnapshot'[DateKey]),",
+              "        REMOVEFILTERS('DW Dim_Date')",
+              "    )",
+              "RETURN",
+              "CALCULATE(",
+              "    AVERAGE('DW Fact_CustomerSnapshot'[SatisfactionScore]),",
+              "    'DW Fact_CustomerSnapshot'[DateKey] = MaxDateInData",
+              ")"
+            ],
+            "formatString": "#,0.00"
+          },
+          {
+            "name": "Avg Recency Days",
+            "expression": [
+              " ",
+              "VAR MaxDateInData = ",
+              "    CALCULATE(",
+              "        MAX('DW Fact_CustomerSnapshot'[DateKey]),",
+              "        REMOVEFILTERS('DW Dim_Date')",
+              "    )",
+              "RETURN",
+              "CALCULATE(",
+              "    AVERAGE('DW Fact_CustomerSnapshot'[DaysSinceLastTransaction]),",
+              "    'DW Fact_CustomerSnapshot'[DateKey] = MaxDateInData",
+              ")",
+              ""
+            ],
+            "formatString": "#,0.00"
+          },
+          {
+            "name": "Total Transaction Amount",
+            "expression": " SUM('DW Fact_CustomerSnapshot'[TotalTransactionAmount])",
+            "formatString": "\"₹\"#,0.00;#,0.00 -\"₹\";\"₹\"#,0.00",
+            "annotations": [
+              {
+                "name": "Format",
+                "value": "<Format Format=\"Currency\" Accuracy=\"2\"><Currency LCID=\"1081\" DisplayName=\"₹ Hindi (India)\" Symbol=\"₹\" PositivePattern=\"0\" NegativePattern=\"12\" /></Format>"
+              }
+            ]
+          },
+          {
+            "name": "Total Transactions",
+            "expression": [
+              " ",
+              "SUM('DW Fact_CustomerSnapshot'[TransactionCount])"
+            ],
+            "formatString": "#,0"
+          },
+          {
+            "name": "Avg Transaction Amount",
+            "expression": [
+              " ",
+              "DIVIDE([Total Transaction Amount], [Total Transactions], 0)"
+            ],
+            "formatString": "\"₹\"#,0.00;#,0.00 -\"₹\";\"₹\"#,0.00",
+            "annotations": [
+              {
+                "name": "Format",
+                "value": "<Format Format=\"Currency\" Accuracy=\"2\"><Currency LCID=\"1081\" DisplayName=\"₹ Hindi (India)\" Symbol=\"₹\" PositivePattern=\"0\" NegativePattern=\"12\" /></Format>"
+              }
+            ]
+          },
+          {
+            "name": "Total Balance",
+            "expression": [
+              " ",
+              "SUM('DW Fact_CustomerSnapshot'[FinalAccountBalance])"
+            ],
+            "formatString": "\"₹\"#,0.00;#,0.00 -\"₹\";\"₹\"#,0.00",
+            "annotations": [
+              {
+                "name": "Format",
+                "value": "<Format Format=\"Currency\" Accuracy=\"2\"><Currency LCID=\"1081\" DisplayName=\"₹ Hindi (India)\" Symbol=\"₹\" PositivePattern=\"0\" NegativePattern=\"12\" /></Format>"
+              }
+            ]
+          },
+          {
+            "name": "Customers with Complaints",
+            "expression": [
+              " ",
+              "VAR MaxDateInData = ",
+              "    CALCULATE(",
+              "        MAX('DW Fact_CustomerSnapshot'[DateKey]),",
+              "        REMOVEFILTERS('DW Dim_Date')",
+              "    )",
+              "RETURN",
+              "CALCULATE(",
+              "    DISTINCTCOUNT('DW Fact_CustomerSnapshot'[CustomerKey]),",
+              "    'DW Fact_CustomerSnapshot'[ComplaintFlag] = TRUE,",
+              "    'DW Fact_CustomerSnapshot'[DateKey] = MaxDateInData",
+              ")"
+            ],
+            "formatString": "#,0"
+          },
+          {
+            "name": "Complaint Rate",
+            "expression": [
+              " ",
+              "DIVIDE([Customers with Complaints], [Total Customers], 0)"
+            ],
+            "formatString": "0.00%;-0.00%;0.00%"
+          },
+          {
+            "name": "Avg Growth Rate",
+            "expression": [
+              " ",
+              "VAR MaxDateInData = ",
+              "    CALCULATE(",
+              "        MAX('DW Fact_CustomerSnapshot'[DateKey]),",
+              "        REMOVEFILTERS()",
+              "    )",
+              "RETURN",
+              "CALCULATE(",
+              "    AVERAGE('DW Fact_CustomerSnapshot'[GrowthRate]),",
+              "    'DW Fact_CustomerSnapshot'[DateKey] = MaxDateInData",
+              ") / 100"
+            ],
+            "formatString": "0.00%;-0.00%;0.00%"
+          },
+          {
+            "name": "Customer Count by Segment",
+            "expression": [
+              "",
+              "CALCULATE(",
+              "    DISTINCTCOUNT('DW Fact_CustomerSnapshot'[CustomerKey]),",
+              "    KEEPFILTERS('DW Dim_Segment')",
+              ")"
+            ],
+            "formatString": "#,0"
+          },
+          {
+            "name": "Segment %",
+            "expression": [
+              " ",
+              "DIVIDE(",
+              "    [Customer Count by Segment],",
+              "    CALCULATE([Total Customers], ALLSELECTED('DW Dim_Segment')),",
+              "    0",
+              ")"
+            ],
+            "formatString": "0.00%;-0.00%;0.00%"
+          },
+          {
+            "name": "Promoters",
+            "expression": [
+              " ",
+              "VAR MaxDateInData = ",
+              "    CALCULATE(",
+              "        MAX('DW Fact_CustomerSnapshot'[DateKey]),",
+              "        REMOVEFILTERS('DW Dim_Date')",
+              "    )",
+              "RETURN",
+              "CALCULATE(",
+              "    DISTINCTCOUNT('DW Fact_CustomerSnapshot'[CustomerKey]),",
+              "    'DW Fact_CustomerSnapshot'[SatisfactionScore] >= 4,",
+              "    'DW Fact_CustomerSnapshot'[DateKey] = MaxDateInData",
+              ")"
+            ],
+            "formatString": "#,0"
+          },
+          {
+            "name": "Detractors",
+            "expression": [
+              " ",
+              "VAR MaxDateInData = ",
+              "    CALCULATE(",
+              "        MAX('DW Fact_CustomerSnapshot'[DateKey]),",
+              "        REMOVEFILTERS('DW Dim_Date')",
+              "    )",
+              "RETURN",
+              "CALCULATE(",
+              "    DISTINCTCOUNT('DW Fact_CustomerSnapshot'[CustomerKey]),",
+              "    'DW Fact_CustomerSnapshot'[SatisfactionScore] <= 2,",
+              "    'DW Fact_CustomerSnapshot'[DateKey] = MaxDateInData",
+              ")"
+            ],
+            "formatString": "#,0"
+          },
+          {
+            "name": "NPS Score",
+            "expression": [
+              " ",
+              "DIVIDE([Promoters], [Total Customers], 0) - DIVIDE([Detractors], [Total Customers], 0)",
+              ""
+            ],
+            "formatString": "0.0%;-0.0%;0.0%"
+          }
         ]
       }
     ],
