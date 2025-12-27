@@ -17,9 +17,8 @@
           "query": null
         },
         "credential": {
-          "AuthenticationKind": "ServiceAccount",
-          "kind": "SQL",
-          "path": "soheilt;BankingDW",
+          "AuthenticationKind": "UsernamePassword",
+          "Username": "sa",
           "EncryptConnection": false
         }
       }
@@ -772,7 +771,8 @@
               " ",
               "DISTINCTCOUNT('DW Dim_Customer'[CustomerID])"
             ],
-            "formatString": "#,0"
+            "formatString": "#,0",
+            "displayFolder": "Customer Metrics"
           },
           {
             "name": "Avg Transaction Frequency",
@@ -780,7 +780,8 @@
               " ",
               "AVERAGE('DW Fact_CustomerSnapshot'[TransactionCount])"
             ],
-            "formatString": "#,0.00"
+            "formatString": "#,0.00",
+            "displayFolder": "Customer Metrics"
           },
           {
             "name": "Active Customers",
@@ -798,7 +799,8 @@
               "    'DW Fact_CustomerSnapshot'[DateKey] = MaxDateInData",
               ")"
             ],
-            "formatString": "#,0"
+            "formatString": "#,0",
+            "displayFolder": "Customer Metrics"
           },
           {
             "name": "Active Customer Rate",
@@ -806,7 +808,8 @@
               " ",
               "DIVIDE([Active Customers], [Total Customers], 0)"
             ],
-            "formatString": "0.00%;-0.00%;0.00%"
+            "formatString": "0.00%;-0.00%;0.00%",
+            "displayFolder": "Customer Metrics"
           },
           {
             "name": "Churned Customers",
@@ -824,7 +827,8 @@
               "    'DW Fact_CustomerSnapshot'[DateKey] = MaxDateInData",
               ")"
             ],
-            "formatString": "#,0"
+            "formatString": "#,0",
+            "displayFolder": "Churn & Retention"
           },
           {
             "name": "Churn Rate",
@@ -832,12 +836,14 @@
               " ",
               "DIVIDE([Churned Customers], [Total Customers], 0)"
             ],
-            "formatString": "0.00%;-0.00%;0.00%"
+            "formatString": "0.00%;-0.00%;0.00%",
+            "displayFolder": "Churn & Retention"
           },
           {
             "name": "Retention Rate",
             "expression": " 1 - [Churn Rate]",
-            "formatString": "0.00%;-0.00%;0.00%"
+            "formatString": "0.00%;-0.00%;0.00%",
+            "displayFolder": "Churn & Retention"
           },
           {
             "name": "At-Risk Customers",
@@ -858,7 +864,8 @@
               "RETURN",
               "IF(ISBLANK(Result), 0, Result)"
             ],
-            "formatString": "#,0"
+            "formatString": "#,0",
+            "displayFolder": "Churn & Retention"
           },
           {
             "name": "Avg Loyalty Score",
@@ -875,7 +882,8 @@
               "    'DW Fact_CustomerSnapshot'[DateKey] = MaxDateInData",
               ")"
             ],
-            "formatString": "#,0.00"
+            "formatString": "#,0.00",
+            "displayFolder": "Loyalty & Satisfaction"
           },
           {
             "name": "Avg Satisfaction Score",
@@ -892,7 +900,8 @@
               "    'DW Fact_CustomerSnapshot'[DateKey] = MaxDateInData",
               ")"
             ],
-            "formatString": "#,0.00"
+            "formatString": "#,0.00",
+            "displayFolder": "Loyalty & Satisfaction"
           },
           {
             "name": "Avg Recency Days",
@@ -910,12 +919,14 @@
               ")",
               ""
             ],
-            "formatString": "#,0.00"
+            "formatString": "#,0.00",
+            "displayFolder": "Loyalty & Satisfaction"
           },
           {
             "name": "Total Transaction Amount",
             "expression": " SUM('DW Fact_CustomerSnapshot'[TotalTransactionAmount])",
             "formatString": "\"₹\"#,0.00;#,0.00 -\"₹\";\"₹\"#,0.00",
+            "displayFolder": "Transactions",
             "annotations": [
               {
                 "name": "Format",
@@ -929,7 +940,8 @@
               " ",
               "SUM('DW Fact_CustomerSnapshot'[TransactionCount])"
             ],
-            "formatString": "#,0"
+            "formatString": "#,0",
+            "displayFolder": "Transactions"
           },
           {
             "name": "Avg Transaction Amount",
@@ -938,6 +950,7 @@
               "DIVIDE([Total Transaction Amount], [Total Transactions], 0)"
             ],
             "formatString": "\"₹\"#,0.00;#,0.00 -\"₹\";\"₹\"#,0.00",
+            "displayFolder": "Transactions",
             "annotations": [
               {
                 "name": "Format",
@@ -952,6 +965,7 @@
               "SUM('DW Fact_CustomerSnapshot'[FinalAccountBalance])"
             ],
             "formatString": "\"₹\"#,0.00;#,0.00 -\"₹\";\"₹\"#,0.00",
+            "displayFolder": "Transactions",
             "annotations": [
               {
                 "name": "Format",
@@ -975,7 +989,8 @@
               "    'DW Fact_CustomerSnapshot'[DateKey] = MaxDateInData",
               ")"
             ],
-            "formatString": "#,0"
+            "formatString": "#,0",
+            "displayFolder": "Behavior"
           },
           {
             "name": "Complaint Rate",
@@ -983,7 +998,8 @@
               " ",
               "DIVIDE([Customers with Complaints], [Total Customers], 0)"
             ],
-            "formatString": "0.00%;-0.00%;0.00%"
+            "formatString": "0.00%;-0.00%;0.00%",
+            "displayFolder": "Behavior"
           },
           {
             "name": "Avg Growth Rate",
@@ -1000,7 +1016,8 @@
               "    'DW Fact_CustomerSnapshot'[DateKey] = MaxDateInData",
               ") / 100"
             ],
-            "formatString": "0.00%;-0.00%;0.00%"
+            "formatString": "0.00%;-0.00%;0.00%",
+            "displayFolder": "Behavior"
           },
           {
             "name": "Customer Count by Segment",
@@ -1011,7 +1028,8 @@
               "    KEEPFILTERS('DW Dim_Segment')",
               ")"
             ],
-            "formatString": "#,0"
+            "formatString": "#,0",
+            "displayFolder": "Segments"
           },
           {
             "name": "Segment %",
@@ -1023,7 +1041,8 @@
               "    0",
               ")"
             ],
-            "formatString": "0.00%;-0.00%;0.00%"
+            "formatString": "0.00%;-0.00%;0.00%",
+            "displayFolder": "Segments"
           },
           {
             "name": "Promoters",
@@ -1041,7 +1060,8 @@
               "    'DW Fact_CustomerSnapshot'[DateKey] = MaxDateInData",
               ")"
             ],
-            "formatString": "#,0"
+            "formatString": "#,0",
+            "displayFolder": "NPS"
           },
           {
             "name": "Detractors",
@@ -1059,7 +1079,8 @@
               "    'DW Fact_CustomerSnapshot'[DateKey] = MaxDateInData",
               ")"
             ],
-            "formatString": "#,0"
+            "formatString": "#,0",
+            "displayFolder": "NPS"
           },
           {
             "name": "NPS Score",
@@ -1068,7 +1089,8 @@
               "DIVIDE([Promoters], [Total Customers], 0) - DIVIDE([Detractors], [Total Customers], 0)",
               ""
             ],
-            "formatString": "0.0%;-0.0%;0.0%"
+            "formatString": "0.0%;-0.0%;0.0%",
+            "displayFolder": "NPS"
           }
         ]
       }
