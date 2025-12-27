@@ -72,11 +72,12 @@ Banking-Loyalty-Churn-Analytics/
 │   │   └── Package 5 - CustomerSnapshot      ✅ COMPLETED
 │   └── README.md
 │
-├── 06-SSAS-Tabular/                          ✅ Phase 6 - Steps 1-5 Complete
-│   └── BankingTabularModel/
-│       ├── Model.bim
-│       ├── BankingTabularModel.sln
-│       └── BankingTabularModel.smproj
+├── 06-SSAS-Tabular/                          ✅ Phase 6 - COMPLETED
+│   ├── BankingTabularModel/
+│   │   ├── Model.bim
+│   │   ├── BankingTabularModel.sln
+│   │   └── BankingTabularModel.smproj
+│   └── README.md
 │
 ├── 07-PowerBI-Dashboards/                    ⏳ Phase 7
 │   ├── Executive-Dashboard.pbix
@@ -338,32 +339,29 @@ Created separate `BankingStaging` database (Enterprise best practice):
 
 ---
 
-**✅ Phase 6: OLAP Cube (In Progress - Steps 1-5 Complete)**
+✅ Phase 6: SSAS Tabular Model (COMPLETED)
 
-**Completed:**
+Completed:
 - ✅ Project setup (Compatibility Level: 1600 - SQL Server 2022)
 - ✅ Data source connection (SOHEILT;BankingDW)
 - ✅ Tables imported (5 tables: Dim_Date, Dim_Customer, Dim_Location, Dim_Segment, Fact_CustomerSnapshot)
 - ✅ Relationships created (4 relationships - all Many-to-One, Single direction)
 - ✅ Calendar hierarchy (Year → Quarter → Month → Date)
-- ✅ Display Folders configured for better organization
+- ✅ Display Folders configured (6 folders: Customer Metrics, Churn & Retention, Loyalty & Satisfaction, Transactions, Behavior, Segments, NPS)
 - ✅ Technical columns hidden (keys, SCD metadata, audit fields)
+- ✅ 21 DAX measures created and formatted
+- ✅ Model deployed and tested in SSMS
 
-**Next:** DAX Measures creation (15+ KPIs)
+DAX Measures Created (21 KPIs):
+- Customer Activity: Total Customers, Active Customers, Active Customer Rate, Avg Transaction Frequency
+- Churn & Retention: Churned Customers, Churn Rate, Retention Rate, At-Risk Customers
+- Loyalty & Satisfaction: Avg Loyalty Score, Avg Satisfaction Score, Avg Recency Days
+- Transactions: Total Transaction Amount, Total Transactions, Avg Transaction Amount, Total Balance
+- Behavior: Customers with Complaints, Complaint Rate, Avg Growth Rate
+- Segments: Customer Count by Segment, Segment %
+- NPS: Promoters, Detractors, NPS Score
 
-**Deliverables:**
-- SSAS Tabular model with relationships
-- 15+ DAX measures for KPIs:
-  - Active Customer Rate
-  - Churn Rate & Retention Rate
-  - Average Loyalty & Satisfaction Scores
-  - Complaint Rate
-  - NPS (Net Promoter Score)
-  - Customer Lifetime Value
-  - Segment distribution percentages
-- Calculated columns for complex logic
-- Row-level security (optional)
-- Processing optimization strategies
+📄 View SSAS Tabular Model
 
 ---
 
@@ -476,10 +474,12 @@ This project demonstrates proficiency in:
 - SSAS Tabular model development (structure, relationships, hierarchies)
 - Display Folders and column organization
 - Marking Date tables for Time Intelligence
+- SSAS Tabular model development (structure, relationships, hierarchies)
+- DAX formulas and calculated measures (21 KPIs)
+- Display Folders and column organization
+- Model deployment and testing
 
-### ⏳ Upcoming:
-- OLAP cube development with SSAS Tabular
-- DAX formulas and calculated measures
+⏳ Upcoming:
 - Data visualization and storytelling with Power BI
 - End-to-end DW project lifecycle management
 ---
@@ -543,7 +543,8 @@ python generate_extended_transactions.py
 - Data Modeling: ✅ 100%
 - Data Augmentation: ✅ 100%
 - ETL Development: ✅ 100% (All 5 packages complete)
-- OLAP: 🔄 50% (Model structure complete, measures pending)
+- OLAP: ✅ 100% (21 measures created, deployed, tested)
+- Power BI: ⏳ 0% (Phase 7 - Next)
 
 ---
 
