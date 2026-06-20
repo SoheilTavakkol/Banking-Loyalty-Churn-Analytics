@@ -1,0 +1,1646 @@
+{
+  "name": "SemanticModel",
+  "compatibilityLevel": 1600,
+  "model": {
+    "culture": "en-US",
+    "dataSources": [
+      {
+        "type": "structured",
+        "name": "SQL/ ;BankingDW",
+        "connectionDetails": {
+          "protocol": "tds",
+          "address": {
+            "server": ".",
+            "database": "BankingDW"
+          },
+          "authentication": null,
+          "query": null
+        },
+        "credential": {
+          "AuthenticationKind": "ServiceAccount",
+          "EncryptConnection": false
+        }
+      }
+    ],
+    "tables": [
+      {
+        "name": "Dim_Date",
+        "dataCategory": "Time",
+        "columns": [
+          {
+            "name": "DateKey",
+            "dataType": "int64",
+            "isHidden": true,
+            "sourceColumn": "DateKey"
+          },
+          {
+            "name": "FullDateTime",
+            "dataType": "dateTime",
+            "sourceColumn": "FullDateTime"
+          },
+          {
+            "name": "Date",
+            "dataType": "dateTime",
+            "isKey": true,
+            "sourceColumn": "Date"
+          },
+          {
+            "name": "Year",
+            "dataType": "int64",
+            "sourceColumn": "Year"
+          },
+          {
+            "name": "Year Name",
+            "dataType": "string",
+            "sourceColumn": "YearName"
+          },
+          {
+            "name": "Quarter",
+            "dataType": "int64",
+            "sourceColumn": "Quarter"
+          },
+          {
+            "name": "Quarter Name",
+            "dataType": "string",
+            "sourceColumn": "QuarterName"
+          },
+          {
+            "name": "Year Quarter",
+            "dataType": "string",
+            "sourceColumn": "YearQuarter"
+          },
+          {
+            "name": "Month Number",
+            "dataType": "int64",
+            "sourceColumn": "Month"
+          },
+          {
+            "name": "Month Name",
+            "dataType": "string",
+            "sourceColumn": "MonthName"
+          },
+          {
+            "name": "Month Short",
+            "dataType": "string",
+            "sourceColumn": "MonthNameShort"
+          },
+          {
+            "name": "Year Month",
+            "dataType": "string",
+            "sourceColumn": "YearMonth"
+          },
+          {
+            "name": "Year Month Name",
+            "dataType": "string",
+            "sourceColumn": "YearMonthName"
+          },
+          {
+            "name": "Day",
+            "dataType": "int64",
+            "sourceColumn": "Day"
+          },
+          {
+            "name": "Day Of Week",
+            "dataType": "int64",
+            "sourceColumn": "DayOfWeek"
+          },
+          {
+            "name": "Day Name",
+            "dataType": "string",
+            "sourceColumn": "DayName"
+          },
+          {
+            "name": "Day Short",
+            "dataType": "string",
+            "sourceColumn": "DayNameShort"
+          },
+          {
+            "name": "Day Of Year",
+            "dataType": "int64",
+            "sourceColumn": "DayOfYear"
+          },
+          {
+            "name": "Week Of Year",
+            "dataType": "int64",
+            "sourceColumn": "WeekOfYear"
+          },
+          {
+            "name": "Week Of Month",
+            "dataType": "int64",
+            "sourceColumn": "WeekOfMonth"
+          },
+          {
+            "name": "Fiscal Year",
+            "dataType": "int64",
+            "sourceColumn": "FiscalYear"
+          },
+          {
+            "name": "Fiscal Quarter",
+            "dataType": "int64",
+            "sourceColumn": "FiscalQuarter"
+          },
+          {
+            "name": "Fiscal Month",
+            "dataType": "int64",
+            "sourceColumn": "FiscalMonth"
+          },
+          {
+            "name": "Time",
+            "dataType": "dateTime",
+            "sourceColumn": "Time"
+          },
+          {
+            "name": "Hour",
+            "dataType": "int64",
+            "sourceColumn": "Hour"
+          },
+          {
+            "name": "Hour Name",
+            "dataType": "string",
+            "sourceColumn": "HourName"
+          },
+          {
+            "name": "Minute",
+            "dataType": "int64",
+            "sourceColumn": "Minute"
+          },
+          {
+            "name": "Time Of Day",
+            "dataType": "string",
+            "sourceColumn": "TimeOfDay"
+          },
+          {
+            "name": "Is Weekend",
+            "dataType": "boolean",
+            "sourceColumn": "IsWeekend"
+          },
+          {
+            "name": "Is Holiday",
+            "dataType": "boolean",
+            "sourceColumn": "IsHoliday"
+          },
+          {
+            "name": "Is Working Day",
+            "dataType": "boolean",
+            "sourceColumn": "IsWorkingDay"
+          },
+          {
+            "name": "Is Today",
+            "dataType": "boolean",
+            "sourceColumn": "IsToday"
+          },
+          {
+            "name": "Is Yesterday",
+            "dataType": "boolean",
+            "sourceColumn": "IsYesterday"
+          },
+          {
+            "name": "Is Current Month",
+            "dataType": "boolean",
+            "isHidden": true,
+            "sourceColumn": "IsCurrentMonth"
+          },
+          {
+            "name": "Is Current Quarter",
+            "dataType": "boolean",
+            "isHidden": true,
+            "sourceColumn": "IsCurrentQuarter"
+          },
+          {
+            "name": "Is Current Year",
+            "dataType": "boolean",
+            "isHidden": true,
+            "sourceColumn": "IsCurrentYear"
+          },
+          {
+            "name": "CreatedDate",
+            "dataType": "dateTime",
+            "isHidden": true,
+            "sourceColumn": "CreatedDate"
+          },
+          {
+            "type": "calculated",
+            "name": "MonthLabel",
+            "dataType": "string",
+            "isDataTypeInferred": true,
+            "expression": " FORMAT(Dim_Date[Date], \"MMM-YY\")",
+            "sortByColumn": "MonthSort"
+          },
+          {
+            "type": "calculated",
+            "name": "MonthSort",
+            "dataType": "int64",
+            "isDataTypeInferred": true,
+            "expression": " Dim_Date[Year] * 100 + Dim_Date[Month Number]"
+          }
+        ],
+        "partitions": [
+          {
+            "name": "Partition",
+            "dataView": "full",
+            "source": {
+              "type": "m",
+              "expression": [
+                "let",
+                "    Source = #\"SQL/ ;BankingDW\",",
+                "    DW_Dim_Date = Source{[Schema=\"DW\",Item=\"Dim_Date\"]}[Data]",
+                "in",
+                "    DW_Dim_Date"
+              ]
+            }
+          }
+        ],
+        "hierarchies": [
+          {
+            "name": "Hierarchy1",
+            "levels": [
+              {
+                "name": "Year",
+                "ordinal": 0,
+                "column": "Year"
+              },
+              {
+                "name": "Quarter Name",
+                "ordinal": 1,
+                "column": "Quarter Name"
+              },
+              {
+                "name": "Month Name",
+                "ordinal": 2,
+                "column": "Month Name"
+              },
+              {
+                "name": "MonthLabel",
+                "ordinal": 3,
+                "column": "MonthLabel"
+              },
+              {
+                "name": "Date",
+                "ordinal": 4,
+                "column": "Date"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "name": "Dim_Location",
+        "columns": [
+          {
+            "name": "LocationKey",
+            "dataType": "int64",
+            "isHidden": true,
+            "sourceColumn": "LocationKey"
+          },
+          {
+            "name": "Location Code",
+            "dataType": "string",
+            "sourceColumn": "LocationCode"
+          },
+          {
+            "name": "Location Name",
+            "dataType": "string",
+            "sourceColumn": "LocationName"
+          },
+          {
+            "name": "City",
+            "dataType": "string",
+            "sourceColumn": "City"
+          },
+          {
+            "name": "State",
+            "dataType": "string",
+            "sourceColumn": "State"
+          },
+          {
+            "name": "Country",
+            "dataType": "string",
+            "sourceColumn": "Country"
+          },
+          {
+            "name": "Region",
+            "dataType": "string",
+            "sourceColumn": "Region"
+          },
+          {
+            "name": "Latitude",
+            "dataType": "double",
+            "isHidden": true,
+            "sourceColumn": "Latitude"
+          },
+          {
+            "name": "Longitude",
+            "dataType": "double",
+            "isHidden": true,
+            "sourceColumn": "Longitude"
+          },
+          {
+            "name": "Location Type",
+            "dataType": "string",
+            "sourceColumn": "LocationType"
+          },
+          {
+            "name": "CreatedDate",
+            "dataType": "dateTime",
+            "isHidden": true,
+            "sourceColumn": "CreatedDate"
+          },
+          {
+            "name": "ModifiedDate",
+            "dataType": "dateTime",
+            "isHidden": true,
+            "sourceColumn": "ModifiedDate"
+          }
+        ],
+        "partitions": [
+          {
+            "name": "Partition",
+            "dataView": "full",
+            "source": {
+              "type": "m",
+              "expression": [
+                "let",
+                "    Source = #\"SQL/ ;BankingDW\",",
+                "    DW_Dim_Location = Source{[Schema=\"DW\",Item=\"Dim_Location\"]}[Data]",
+                "in",
+                "    DW_Dim_Location"
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "name": "Dim_Segment",
+        "columns": [
+          {
+            "name": "SegmentKey",
+            "dataType": "int64",
+            "isHidden": true,
+            "sourceColumn": "SegmentKey"
+          },
+          {
+            "name": "Segment Code",
+            "dataType": "string",
+            "sourceColumn": "SegmentCode"
+          },
+          {
+            "name": "Segment Name",
+            "dataType": "string",
+            "sourceColumn": "SegmentName"
+          },
+          {
+            "name": "Segment Type",
+            "dataType": "string",
+            "sourceColumn": "SegmentType"
+          },
+          {
+            "name": "Description",
+            "dataType": "string",
+            "sourceColumn": "Description"
+          },
+          {
+            "name": "Recency Min",
+            "dataType": "int64",
+            "isHidden": true,
+            "sourceColumn": "RecencyMin"
+          },
+          {
+            "name": "Recency Max",
+            "dataType": "int64",
+            "isHidden": true,
+            "sourceColumn": "RecencyMax"
+          },
+          {
+            "name": "Frequency Min",
+            "dataType": "int64",
+            "isHidden": true,
+            "sourceColumn": "FrequencyMin"
+          },
+          {
+            "name": "Frequency Max",
+            "dataType": "int64",
+            "isHidden": true,
+            "sourceColumn": "FrequencyMax"
+          },
+          {
+            "name": "DisplayOrder",
+            "dataType": "int64",
+            "sourceColumn": "DisplayOrder"
+          },
+          {
+            "name": "Color",
+            "dataType": "string",
+            "sourceColumn": "Color"
+          },
+          {
+            "name": "Is Active",
+            "dataType": "boolean",
+            "sourceColumn": "IsActive"
+          },
+          {
+            "name": "StartDate",
+            "dataType": "dateTime",
+            "isHidden": true,
+            "sourceColumn": "StartDate"
+          },
+          {
+            "name": "EndDate",
+            "dataType": "dateTime",
+            "isHidden": true,
+            "sourceColumn": "EndDate"
+          },
+          {
+            "name": "CreatedDate",
+            "dataType": "dateTime",
+            "isHidden": true,
+            "sourceColumn": "CreatedDate"
+          },
+          {
+            "name": "ModifiedDate",
+            "dataType": "dateTime",
+            "isHidden": true,
+            "sourceColumn": "ModifiedDate"
+          }
+        ],
+        "partitions": [
+          {
+            "name": "Partition",
+            "dataView": "full",
+            "source": {
+              "type": "m",
+              "expression": [
+                "let",
+                "    Source = #\"SQL/ ;BankingDW\",",
+                "    DW_Dim_Segment = Source{[Schema=\"DW\",Item=\"Dim_Segment\"]}[Data]",
+                "in",
+                "    DW_Dim_Segment"
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "name": "Fact_CustomerSnapshot",
+        "columns": [
+          {
+            "name": "SnapshotKey",
+            "dataType": "int64",
+            "sourceColumn": "SnapshotKey"
+          },
+          {
+            "name": "Customer Key",
+            "dataType": "int64",
+            "isHidden": true,
+            "sourceColumn": "CustomerKey"
+          },
+          {
+            "name": "DateKey",
+            "dataType": "int64",
+            "isHidden": true,
+            "sourceColumn": "DateKey"
+          },
+          {
+            "name": "SegmentKey",
+            "dataType": "int64",
+            "isHidden": true,
+            "sourceColumn": "SegmentKey"
+          },
+          {
+            "name": "Transaction Count",
+            "dataType": "int64",
+            "sourceColumn": "TransactionCount"
+          },
+          {
+            "name": "Total Transaction Amt",
+            "dataType": "double",
+            "sourceColumn": "TotalTransactionAmount"
+          },
+          {
+            "name": "Avg Transaction Amt",
+            "dataType": "double",
+            "sourceColumn": "AvgTransactionAmount"
+          },
+          {
+            "name": "Min Transaction Amt",
+            "dataType": "double",
+            "sourceColumn": "MinTransactionAmount"
+          },
+          {
+            "name": "Max Transaction Amt",
+            "dataType": "double",
+            "sourceColumn": "MaxTransactionAmount"
+          },
+          {
+            "name": "Days Since Last Transaction",
+            "dataType": "int64",
+            "sourceColumn": "DaysSinceLastTransaction"
+          },
+          {
+            "name": "Recency Score",
+            "dataType": "int64",
+            "isHidden": true,
+            "sourceColumn": "RecencyScore"
+          },
+          {
+            "name": "Frequency Score",
+            "dataType": "int64",
+            "isHidden": true,
+            "sourceColumn": "FrequencyScore"
+          },
+          {
+            "name": "Loyalty Score",
+            "dataType": "double",
+            "isHidden": true,
+            "sourceColumn": "LoyaltyScore"
+          },
+          {
+            "name": "Satisfaction Score",
+            "dataType": "double",
+            "sourceColumn": "SatisfactionScore"
+          },
+          {
+            "name": "Complaint Flag",
+            "dataType": "boolean",
+            "sourceColumn": "ComplaintFlag"
+          },
+          {
+            "name": "Churn Flag",
+            "dataType": "boolean",
+            "sourceColumn": "ChurnFlag"
+          },
+          {
+            "name": "At Risk Flag",
+            "dataType": "boolean",
+            "sourceColumn": "AtRiskFlag"
+          },
+          {
+            "name": "Trend Category",
+            "dataType": "string",
+            "sourceColumn": "TrendCategory"
+          },
+          {
+            "name": "Previous Month Transaction Count",
+            "dataType": "int64",
+            "sourceColumn": "PreviousMonthTransactionCount"
+          },
+          {
+            "name": "Growth Rate",
+            "dataType": "double",
+            "sourceColumn": "GrowthRate"
+          },
+          {
+            "name": "Final Account Balance",
+            "dataType": "double",
+            "sourceColumn": "FinalAccountBalance"
+          },
+          {
+            "name": "ETLLoadDate",
+            "dataType": "dateTime",
+            "isHidden": true,
+            "sourceColumn": "ETLLoadDate"
+          },
+          {
+            "name": "ETLBatchID",
+            "dataType": "int64",
+            "isHidden": true,
+            "sourceColumn": "ETLBatchID"
+          },
+          {
+            "type": "calculated",
+            "name": "RecencyBucket",
+            "dataType": "string",
+            "isDataTypeInferred": true,
+            "expression": [
+              "",
+              "SWITCH(",
+              "    TRUE(),",
+              "    Fact_CustomerSnapshot[Days Since Last Transaction] <= 30,  \"0-30 days\",",
+              "    Fact_CustomerSnapshot[Days Since Last Transaction] <= 60,  \"31-60 days\",",
+              "    Fact_CustomerSnapshot[Days Since Last Transaction] <= 90,  \"61-90 days\",",
+              "    Fact_CustomerSnapshot[Days Since Last Transaction] <= 180, \"91-180 days\",",
+              "    \"180+ days\"",
+              ")"
+            ]
+          },
+          {
+            "type": "calculated",
+            "name": "LoyaltyBand",
+            "dataType": "string",
+            "isDataTypeInferred": true,
+            "expression": [
+              "",
+              "SWITCH(",
+              "    TRUE(),",
+              "    Fact_CustomerSnapshot[Loyalty Score] >= 4.0, \"High (4-5)\",",
+              "    Fact_CustomerSnapshot[Loyalty Score] >= 2.5, \"Medium (2.5-4)\",",
+              "    \"Low (<2.5)\"",
+              ")"
+            ]
+          },
+          {
+            "type": "calculated",
+            "name": "GrowthCategory",
+            "dataType": "string",
+            "isDataTypeInferred": true,
+            "expression": [
+              "",
+              "SWITCH(",
+              "    TRUE(),",
+              "    Fact_CustomerSnapshot[Churn Flag] = True,   \"Churned\",",
+              "    Fact_CustomerSnapshot[Growth Rate] > 20,  \"Growing\",",
+              "    Fact_CustomerSnapshot[Growth Rate] < -20, \"Declining\",",
+              "    \"Stable\"",
+              ")"
+            ]
+          }
+        ],
+        "partitions": [
+          {
+            "name": "Partition",
+            "dataView": "full",
+            "source": {
+              "type": "m",
+              "expression": [
+                "let",
+                "    Source = #\"SQL/ ;BankingDW\",",
+                "    DW_Fact_CustomerSnapshot = Source{[Schema=\"DW\",Item=\"Fact_CustomerSnapshot\"]}[Data]",
+                "in",
+                "    DW_Fact_CustomerSnapshot"
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "name": "Dim_Customer",
+        "columns": [
+          {
+            "name": "CustomerKey",
+            "dataType": "int64",
+            "isHidden": true,
+            "sourceColumn": "CustomerKey"
+          },
+          {
+            "name": "Customer ID",
+            "dataType": "string",
+            "sourceColumn": "CustomerID"
+          },
+          {
+            "name": "Date Of Birth",
+            "dataType": "dateTime",
+            "sourceColumn": "DateOfBirth"
+          },
+          {
+            "name": "Age",
+            "dataType": "int64",
+            "sourceColumn": "Age"
+          },
+          {
+            "name": "Age Group",
+            "dataType": "string",
+            "sourceColumn": "AgeGroup"
+          },
+          {
+            "name": "Gender",
+            "dataType": "string",
+            "sourceColumn": "Gender"
+          },
+          {
+            "name": "Location",
+            "dataType": "string",
+            "sourceColumn": "Location"
+          },
+          {
+            "name": "LocationKey",
+            "dataType": "int64",
+            "isHidden": true,
+            "sourceColumn": "LocationKey"
+          },
+          {
+            "name": "Customer Type",
+            "dataType": "string",
+            "sourceColumn": "CustomerType"
+          },
+          {
+            "name": "First Transaction Date",
+            "dataType": "dateTime",
+            "sourceColumn": "FirstTransactionDate"
+          },
+          {
+            "name": "StartDate",
+            "dataType": "dateTime",
+            "isHidden": true,
+            "sourceColumn": "StartDate"
+          },
+          {
+            "name": "EndDate",
+            "dataType": "dateTime",
+            "isHidden": true,
+            "sourceColumn": "EndDate"
+          },
+          {
+            "name": "Is Current",
+            "dataType": "boolean",
+            "isHidden": true,
+            "sourceColumn": "IsCurrent"
+          },
+          {
+            "name": "CreatedDate",
+            "dataType": "dateTime",
+            "isHidden": true,
+            "sourceColumn": "CreatedDate"
+          },
+          {
+            "name": "ModifiedDate",
+            "dataType": "dateTime",
+            "isHidden": true,
+            "sourceColumn": "ModifiedDate"
+          }
+        ],
+        "partitions": [
+          {
+            "name": "Partition",
+            "dataView": "full",
+            "source": {
+              "type": "m",
+              "expression": [
+                "let",
+                "    Source = #\"SQL/ ;BankingDW\",",
+                "    DW_Dim_Customer = Source{[Schema=\"DW\",Item=\"Dim_Customer\"]}[Data]",
+                "in",
+                "    DW_Dim_Customer"
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "name": "_Measures",
+        "columns": [
+          {
+            "type": "calculatedTableColumn",
+            "name": "HiddenMeasures",
+            "dataType": "int64",
+            "isNameInferred": false,
+            "isDataTypeInferred": true,
+            "sourceColumn": "[SampleColumn]"
+          },
+          {
+            "type": "calculated",
+            "name": "VisibleMeasures",
+            "dataType": "int64",
+            "isDataTypeInferred": true
+          }
+        ],
+        "partitions": [
+          {
+            "name": "CalculatedTable 1",
+            "source": {
+              "type": "calculated",
+              "expression": "ROW(\"SampleColumn\", BLANK())"
+            }
+          }
+        ],
+        "measures": [
+          {
+            "name": "_LastDataDateKey",
+            "expression": " MAXX(ALL(Fact_CustomerSnapshot), Fact_CustomerSnapshot[DateKey])",
+            "isHidden": true
+          },
+          {
+            "name": "_LastDataMonth",
+            "expression": [
+              " ",
+              "VAR MaxKey = [_LastDataDateKey]",
+              "RETURN ",
+              "CALCULATE( ",
+              "    MAX(Dim_Date[Year Month]), ",
+              "    Dim_Date[DateKey] = MaxKey ",
+              ")"
+            ],
+            "isHidden": true
+          },
+          {
+            "name": "_PrevDataDateKey",
+            "expression": [
+              " ",
+              "VAR MaxKey = [_LastDataDateKey] ",
+              "RETURN ",
+              "MAXX(",
+              "    FILTER(ALL(Fact_CustomerSnapshot), Fact_CustomerSnapshot[DateKey] < MaxKey), ",
+              "    Fact_CustomerSnapshot[DateKey]",
+              ")"
+            ],
+            "isHidden": true
+          },
+          {
+            "name": "Total Customers",
+            "expression": [
+              " ",
+              "VAR MaxDate = [_LastDataDateKey]",
+              "RETURN",
+              "CALCULATE(",
+              "    DISTINCTCOUNT(Fact_CustomerSnapshot[Customer Key]),",
+              "    Dim_Date[DateKey] = MaxDate",
+              ")"
+            ],
+            "formatString": "#,0",
+            "displayFolder": "Customer Metrics"
+          },
+          {
+            "name": "Active Customers",
+            "expression": [
+              " ",
+              "VAR MaxDate = [_LastDataDateKey]",
+              "RETURN",
+              "CALCULATE(",
+              "    DISTINCTCOUNT(Fact_CustomerSnapshot[Customer Key]),",
+              "    Dim_Date[DateKey] = MaxDate,",
+              "    Fact_CustomerSnapshot[Churn Flag] = False,",
+              "    Fact_CustomerSnapshot[At Risk Flag] = False",
+              ")"
+            ],
+            "formatString": "#,0",
+            "displayFolder": "Customer Metrics"
+          },
+          {
+            "name": "Active Customer Rate",
+            "expression": [
+              " ",
+              "DIVIDE([Active Customers], [Total Customers])"
+            ],
+            "formatString": "0.00%;-0.00%;0.00%",
+            "displayFolder": "Customer Metrics"
+          },
+          {
+            "name": "New Customers This Month",
+            "expression": [
+              " ",
+              "VAR MaxDate = [_LastDataDateKey]",
+              "RETURN",
+              "CALCULATE(",
+              "    DISTINCTCOUNT(Fact_CustomerSnapshot[Customer Key]),",
+              "    Dim_Date[DateKey] = MaxDate,",
+              "    Fact_CustomerSnapshot[Trend Category] = \"New\"",
+              ")"
+            ],
+            "formatString": "#,0",
+            "displayFolder": "Customer Metrics"
+          },
+          {
+            "name": "Customer Growth MoM",
+            "expression": [
+              " ",
+              "VAR MaxDate = [_LastDataDateKey]",
+              "VAR PrevDate = [_PrevDataDateKey]",
+              "VAR ThisMonth =",
+              "    CALCULATE(",
+              "        DISTINCTCOUNT(Fact_CustomerSnapshot[Customer Key]),",
+              "        Dim_Date[DateKey] = MaxDate",
+              "    )",
+              "VAR PrevMonth =",
+              "    CALCULATE(",
+              "        DISTINCTCOUNT(Fact_CustomerSnapshot[Customer Key]),",
+              "        Dim_Date[DateKey] = PrevDate",
+              "    )",
+              "RETURN ",
+              "DIVIDE(ThisMonth - PrevMonth, PrevMonth)"
+            ],
+            "formatString": "0.00%;-0.00%;0.00%",
+            "displayFolder": "Customer Metrics"
+          },
+          {
+            "name": "Customer Growth QoQ",
+            "expression": [
+              " ",
+              "VAR MaxDateKey = [_LastDataDateKey]",
+              "VAR MaxDateValue = CALCULATE(MAX(Dim_Date[Date]), Dim_Date[DateKey] = MaxDateKey)",
+              "VAR PrevQuarterDate = EOMONTH(MaxDateValue, -3)",
+              "",
+              "VAR ThisMonthCount = [Total Customers]",
+              "VAR PrevQuarterCount = ",
+              "    CALCULATE(",
+              "        DISTINCTCOUNT(Fact_CustomerSnapshot[Customer Key]),",
+              "        REMOVEFILTERS(Dim_Date),",
+              "        Dim_Date[Date] = PrevQuarterDate",
+              "    )",
+              "RETURN ",
+              "DIVIDE(ThisMonthCount - PrevQuarterCount, PrevQuarterCount)"
+            ],
+            "formatString": "0.00%;-0.00%;0.00%",
+            "displayFolder": "Customer Metrics"
+          },
+          {
+            "name": "Customer Growth YoY",
+            "expression": [
+              " ",
+              "VAR MaxDateKey = [_LastDataDateKey]",
+              "VAR MaxDateValue = CALCULATE(MAX(Dim_Date[Date]), Dim_Date[DateKey] = MaxDateKey)",
+              "VAR PrevYearDate = EOMONTH(MaxDateValue, -12)",
+              "",
+              "VAR ThisMonthCount = [Total Customers]",
+              "VAR PrevYearCount = ",
+              "    CALCULATE(",
+              "        DISTINCTCOUNT(Fact_CustomerSnapshot[Customer Key]),",
+              "        REMOVEFILTERS(Dim_Date),",
+              "        Dim_Date[Date] = PrevYearDate",
+              "    )",
+              "RETURN ",
+              "DIVIDE(ThisMonthCount - PrevYearCount, PrevYearCount)"
+            ],
+            "formatString": "0.00%;-0.00%;0.00%",
+            "displayFolder": "Customer Metrics"
+          },
+          {
+            "name": "Churned Customers",
+            "expression": [
+              " ",
+              "VAR MaxDate = [_LastDataDateKey]",
+              "RETURN",
+              "CALCULATE(",
+              "    DISTINCTCOUNT(Fact_CustomerSnapshot[Customer Key]),",
+              "    Dim_Date[DateKey] = MaxDate,",
+              "    Fact_CustomerSnapshot[Churn Flag] = True",
+              ")"
+            ],
+            "formatString": "#,0",
+            "displayFolder": "Churn & Retention"
+          },
+          {
+            "name": "Churn Rate",
+            "expression": [
+              " ",
+              "DIVIDE([Churned Customers], [Total Customers])"
+            ],
+            "formatString": "0.00%;-0.00%;0.00%",
+            "displayFolder": "Churn & Retention"
+          },
+          {
+            "name": "Retention Rate",
+            "expression": [
+              " ",
+              "1 - [Churn Rate]"
+            ],
+            "formatString": "0.00%;-0.00%;0.00%",
+            "displayFolder": "Churn & Retention"
+          },
+          {
+            "name": "At-Risk Customers",
+            "expression": [
+              " ",
+              "VAR MaxDate = [_LastDataDateKey]",
+              "RETURN",
+              "CALCULATE(",
+              "    DISTINCTCOUNT(Fact_CustomerSnapshot[Customer Key]),",
+              "    Dim_Date[DateKey] = MaxDate,",
+              "    Fact_CustomerSnapshot[At Risk Flag] = True",
+              ")"
+            ],
+            "formatString": "#,0",
+            "displayFolder": "Churn & Retention"
+          },
+          {
+            "name": "At-Risk Rate",
+            "expression": [
+              " ",
+              "DIVIDE([At-Risk Customers], [Total Customers])"
+            ],
+            "formatString": "0.00%;-0.00%;0.00%",
+            "displayFolder": "Churn & Retention"
+          },
+          {
+            "name": "Churn Rate MoM Change",
+            "expression": [
+              " ",
+              "VAR MaxDate = [_LastDataDateKey]",
+              "VAR PrevDate = [_PrevDataDateKey]",
+              "VAR ThisChurn =    ",
+              "    CALCULATE(        ",
+              "        DIVIDE(            ",
+              "            CALCULATE(COUNTROWS(Fact_CustomerSnapshot), Fact_CustomerSnapshot[Churn Flag] = True),            ",
+              "            COUNTROWS(Fact_CustomerSnapshot)        ",
+              "        ),        ",
+              "        Dim_Date[DateKey] = MaxDate    ",
+              "    )",
+              "VAR PrevChurn =    ",
+              "    CALCULATE(        ",
+              "        DIVIDE(            ",
+              "            CALCULATE(COUNTROWS(Fact_CustomerSnapshot), Fact_CustomerSnapshot[Churn Flag] = True),            ",
+              "            COUNTROWS(Fact_CustomerSnapshot)        ",
+              "        ),        ",
+              "        Dim_Date[DateKey] = PrevDate    ",
+              "    )",
+              "RETURN ThisChurn - PrevChurn"
+            ],
+            "formatString": "0.00%;-0.00%;0.00%",
+            "displayFolder": "Churn & Retention"
+          },
+          {
+            "name": "Churn Rate Trend",
+            "expression": [
+              " ",
+              "DIVIDE(",
+              "    CALCULATE(COUNTROWS(Fact_CustomerSnapshot), Fact_CustomerSnapshot[Churn Flag] = True),",
+              "    COUNTROWS(Fact_CustomerSnapshot)",
+              ")"
+            ],
+            "formatString": "0.00%;-0.00%;0.00%",
+            "displayFolder": "Churn & Retention"
+          },
+          {
+            "name": "Churn Rate QoQ Change",
+            "expression": [
+              " ",
+              "VAR MaxDateKey = [_LastDataDateKey]",
+              "VAR MaxDateValue = ",
+              "    CALCULATE(MAX(Dim_Date[Date]), Dim_Date[DateKey] = MaxDateKey)",
+              "VAR PrevQuarterDate = ",
+              "    EOMONTH(MaxDateValue, -3)",
+              "VAR ThisChurn = ",
+              "    CALCULATE(",
+              "        [Churn Rate Trend],",
+              "        Dim_Date[DateKey] = MaxDateKey",
+              "    )",
+              "VAR PrevQuarterChurn = ",
+              "    CALCULATE(",
+              "        [Churn Rate Trend],",
+              "        REMOVEFILTERS(Dim_Date),",
+              "        Dim_Date[Date] = PrevQuarterDate",
+              "    )",
+              "RETURN ThisChurn - PrevQuarterChurn"
+            ],
+            "formatString": "0.00%;-0.00%;0.00%",
+            "displayFolder": "Churn & Retention"
+          },
+          {
+            "name": "Churn Rate YoY Change",
+            "expression": [
+              " ",
+              "VAR MaxDateKey = [_LastDataDateKey]",
+              "VAR MaxDateValue = ",
+              "    CALCULATE(MAX(Dim_Date[Date]), Dim_Date[DateKey] = MaxDateKey)",
+              "VAR PrevYearDate = ",
+              "    EOMONTH(MaxDateValue, -12)",
+              "VAR ThisChurn = ",
+              "    CALCULATE(",
+              "        [Churn Rate Trend],",
+              "        Dim_Date[DateKey] = MaxDateKey",
+              "    )",
+              "VAR PrevYearChurn = ",
+              "    CALCULATE(",
+              "        [Churn Rate Trend],",
+              "        REMOVEFILTERS(Dim_Date),",
+              "        Dim_Date[Date] = PrevYearDate",
+              "    )",
+              "RETURN ThisChurn - PrevYearChurn"
+            ],
+            "formatString": "0.00%;-0.00%;0.00%",
+            "displayFolder": "Churn & Retention"
+          },
+          {
+            "name": "Avg Loyalty Score",
+            "expression": [
+              " ",
+              "VAR MaxDate = [_LastDataDateKey]",
+              "RETURN",
+              "CALCULATE(",
+              "    AVERAGE(Fact_CustomerSnapshot[Loyalty Score]),",
+              "    Dim_Date[DateKey] = MaxDate",
+              ")"
+            ],
+            "formatString": "0.00",
+            "displayFolder": "Loyalty & Satisfaction"
+          },
+          {
+            "name": "Avg Satisfaction Score",
+            "expression": [
+              " ",
+              "VAR MaxDate = [_LastDataDateKey]",
+              "RETURN",
+              "CALCULATE(",
+              "    AVERAGE(Fact_CustomerSnapshot[Satisfaction Score]),",
+              "    Dim_Date[DateKey] = MaxDate",
+              ")"
+            ],
+            "formatString": "0.00",
+            "displayFolder": "Loyalty & Satisfaction"
+          },
+          {
+            "name": "Avg Recency Days",
+            "expression": [
+              " ",
+              "VAR MaxDate = [_LastDataDateKey]",
+              "RETURN",
+              "CALCULATE(",
+              "    AVERAGE(Fact_CustomerSnapshot[Days Since Last Transaction]),",
+              "    Dim_Date[DateKey] = MaxDate",
+              ")"
+            ],
+            "formatString": "0.00",
+            "displayFolder": "Loyalty & Satisfaction"
+          },
+          {
+            "name": "Loyalty Score Trend",
+            "expression": [
+              " ",
+              "AVERAGE(Fact_CustomerSnapshot[Loyalty Score])"
+            ],
+            "formatString": "0.00",
+            "displayFolder": "Loyalty & Satisfaction"
+          },
+          {
+            "name": "Loyalty MoM Change",
+            "expression": [
+              " ",
+              "VAR MaxDate = [_LastDataDateKey]",
+              "VAR PrevDate = [_PrevDataDateKey]",
+              "VAR ThisMonth = ",
+              "    CALCULATE(",
+              "        AVERAGE(Fact_CustomerSnapshot[Loyalty Score]), ",
+              "        Dim_Date[DateKey] = MaxDate",
+              "    )",
+              "VAR PrevMonth = ",
+              "    CALCULATE(",
+              "        AVERAGE(Fact_CustomerSnapshot[Loyalty Score]), ",
+              "        Dim_Date[DateKey] = PrevDate",
+              "    )",
+              "RETURN ThisMonth - PrevMonth"
+            ],
+            "formatString": "0.00%;-0.00%;0.00%",
+            "displayFolder": "Loyalty & Satisfaction"
+          },
+          {
+            "name": "Loyalty QoQ Change",
+            "expression": [
+              " ",
+              "VAR MaxDateKey = [_LastDataDateKey]",
+              "VAR MaxDateValue = ",
+              "    CALCULATE(MAX(Dim_Date[Date]), Dim_Date[DateKey] = MaxDateKey)",
+              "VAR PrevQuarterDate = ",
+              "    EOMONTH(MaxDateValue, -3)",
+              "VAR ThisLoyalty = ",
+              "    CALCULATE(",
+              "        [Loyalty Score Trend],",
+              "        Dim_Date[DateKey] = MaxDateKey",
+              "    )",
+              "VAR PrevQuarterLoyalty = ",
+              "    CALCULATE(",
+              "        [Loyalty Score Trend],",
+              "        REMOVEFILTERS(Dim_Date),",
+              "        Dim_Date[Date] = PrevQuarterDate",
+              "    )",
+              "RETURN ThisLoyalty - PrevQuarterLoyalty"
+            ],
+            "formatString": "0.00%;-0.00%;0.00%",
+            "displayFolder": "Loyalty & Satisfaction"
+          },
+          {
+            "name": "Loyalty YoY Change",
+            "expression": [
+              " ",
+              "VAR MaxDateKey = [_LastDataDateKey]",
+              "VAR MaxDateValue = ",
+              "    CALCULATE(MAX(Dim_Date[Date]), Dim_Date[DateKey] = MaxDateKey)",
+              "VAR PrevYearDate = ",
+              "    EOMONTH(MaxDateValue, -12)",
+              "VAR ThisLoyalty = ",
+              "    CALCULATE(",
+              "        [Loyalty Score Trend],",
+              "        Dim_Date[DateKey] = MaxDateKey",
+              "    )",
+              "VAR PrevYearLoyalty = ",
+              "    CALCULATE(",
+              "        [Loyalty Score Trend],",
+              "        REMOVEFILTERS(Dim_Date),",
+              "        Dim_Date[Date] = PrevYearDate",
+              "    )",
+              "RETURN ThisLoyalty - PrevYearLoyalty"
+            ],
+            "formatString": "0.00%;-0.00%;0.00%",
+            "displayFolder": "Loyalty & Satisfaction"
+          },
+          {
+            "name": "Total Transaction Amount",
+            "expression": [
+              " ",
+              "SUM(Fact_CustomerSnapshot[Total Transaction Amt])"
+            ],
+            "formatString": "\\$#,0.00;(\\$#,0.00);\\$#,0.00",
+            "displayFolder": "Transactions",
+            "annotations": [
+              {
+                "name": "Format",
+                "value": "<Format Format=\"Currency\" Accuracy=\"2\"><Currency LCID=\"1033\" DisplayName=\"$ English (United States)\" Symbol=\"$\" PositivePattern=\"0\" NegativePattern=\"0\" /></Format>"
+              }
+            ]
+          },
+          {
+            "name": "Total Transaction Amount (Latest Month)",
+            "expression": [
+              " ",
+              "VAR MaxDate = [_LastDataDateKey]",
+              "RETURN",
+              "CALCULATE(",
+              "    SUM(Fact_CustomerSnapshot[Total Transaction Amt]),",
+              "    Dim_Date[DateKey] = MaxDate",
+              ")"
+            ],
+            "formatString": "\\$#,0.00;(\\$#,0.00);\\$#,0.00",
+            "displayFolder": "Transactions",
+            "annotations": [
+              {
+                "name": "Format",
+                "value": "<Format Format=\"Currency\" Accuracy=\"2\"><Currency LCID=\"1033\" DisplayName=\"$ English (United States)\" Symbol=\"$\" PositivePattern=\"0\" NegativePattern=\"0\" /></Format>"
+              }
+            ]
+          },
+          {
+            "name": "Avg Transaction Amount",
+            "expression": [
+              " ",
+              "VAR MaxDate = [_LastDataDateKey]",
+              "RETURN",
+              "CALCULATE(",
+              "    AVERAGE(Fact_CustomerSnapshot[Avg Transaction Amt]),",
+              "    Dim_Date[DateKey] = MaxDate",
+              ")"
+            ],
+            "formatString": "\\$#,0.00;(\\$#,0.00);\\$#,0.00",
+            "displayFolder": "Transactions",
+            "annotations": [
+              {
+                "name": "Format",
+                "value": "<Format Format=\"Currency\" Accuracy=\"2\"><Currency LCID=\"1033\" DisplayName=\"$ English (United States)\" Symbol=\"$\" PositivePattern=\"0\" NegativePattern=\"0\" /></Format>"
+              }
+            ]
+          },
+          {
+            "name": "Total Transactions",
+            "expression": [
+              " ",
+              "VAR MaxDate = [_LastDataDateKey]",
+              "RETURN",
+              "CALCULATE(",
+              "    SUM(Fact_CustomerSnapshot[Transaction Count]),",
+              "    Dim_Date[DateKey] = MaxDate",
+              ")"
+            ],
+            "formatString": "#,0",
+            "displayFolder": "Transactions"
+          },
+          {
+            "name": "Avg Transactions Per Customer",
+            "expression": [
+              " ",
+              "DIVIDE([Total Transactions], [Total Customers])"
+            ],
+            "formatString": "\\$#,0.00;(\\$#,0.00);\\$#,0.00",
+            "displayFolder": "Transactions",
+            "annotations": [
+              {
+                "name": "Format",
+                "value": "<Format Format=\"Currency\" Accuracy=\"2\"><Currency LCID=\"1033\" DisplayName=\"$ English (United States)\" Symbol=\"$\" PositivePattern=\"0\" NegativePattern=\"0\" /></Format>"
+              }
+            ]
+          },
+          {
+            "name": "Transaction Volume Trend",
+            "expression": [
+              " ",
+              "SUM(Fact_CustomerSnapshot[Transaction Count])"
+            ],
+            "formatString": "\\$#,0.00;(\\$#,0.00);\\$#,0.00",
+            "displayFolder": "Transactions",
+            "annotations": [
+              {
+                "name": "Format",
+                "value": "<Format Format=\"Currency\" Accuracy=\"2\"><Currency LCID=\"1033\" DisplayName=\"$ English (United States)\" Symbol=\"$\" PositivePattern=\"0\" NegativePattern=\"0\" /></Format>"
+              }
+            ]
+          },
+          {
+            "name": "Customers with Complaints",
+            "expression": [
+              " ",
+              "VAR MaxDate = [_LastDataDateKey]",
+              "RETURN",
+              "CALCULATE(",
+              "    DISTINCTCOUNT(Fact_CustomerSnapshot[Customer Key]),",
+              "    Dim_Date[DateKey] = MaxDate,",
+              "    Fact_CustomerSnapshot[Complaint Flag] = TRUE",
+              ")"
+            ],
+            "formatString": "#,0",
+            "displayFolder": "Behavior & Growth"
+          },
+          {
+            "name": "Complaint Rate",
+            "expression": [
+              " ",
+              "DIVIDE([Customers with Complaints], [Total Customers])"
+            ],
+            "formatString": "0.00%;-0.00%;0.00%",
+            "displayFolder": "Behavior & Growth"
+          },
+          {
+            "name": "Avg Growth Rate",
+            "expression": [
+              " ",
+              "VAR MaxDate = [_LastDataDateKey]",
+              "RETURN",
+              "CALCULATE(",
+              "    AVERAGE(Fact_CustomerSnapshot[Growth Rate]),",
+              "    Dim_Date[DateKey] = MaxDate",
+              ") / 100"
+            ],
+            "formatString": "0.00%;-0.00%;0.00%",
+            "displayFolder": "Behavior & Growth"
+          },
+          {
+            "name": "Growing Customers",
+            "expression": [
+              " ",
+              "VAR MaxDate = [_LastDataDateKey]",
+              "RETURN",
+              "CALCULATE(",
+              "    COUNTROWS(Fact_CustomerSnapshot),",
+              "    Dim_Date[DateKey] = MaxDate,",
+              "    Fact_CustomerSnapshot[GrowthCategory] = \"Growing\"",
+              ")"
+            ],
+            "formatString": "#,0",
+            "displayFolder": "Behavior & Growth"
+          },
+          {
+            "name": "Declining Customers",
+            "expression": [
+              " ",
+              "VAR MaxDate = [_LastDataDateKey]",
+              "RETURN",
+              "CALCULATE(",
+              "    COUNTROWS(Fact_CustomerSnapshot),",
+              "    Dim_Date[DateKey] = MaxDate,",
+              "    Fact_CustomerSnapshot[GrowthCategory] = \"Declining\"",
+              ")"
+            ],
+            "formatString": "#,0",
+            "displayFolder": "Behavior & Growth"
+          },
+          {
+            "name": "Customer Count by Segment",
+            "expression": [
+              " ",
+              "VAR MaxDate = [_LastDataDateKey]",
+              "RETURN",
+              "CALCULATE(",
+              "    DISTINCTCOUNT(Fact_CustomerSnapshot[Customer Key]),",
+              "    Dim_Date[DateKey] = MaxDate",
+              ")"
+            ],
+            "formatString": "#,0",
+            "displayFolder": "Segments"
+          },
+          {
+            "name": "Segment Share",
+            "expression": [
+              " ",
+              "DIVIDE(",
+              "    [Customer Count by Segment],",
+              "    CALCULATE([Customer Count by Segment], REMOVEFILTERS(Dim_Segment))",
+              ")"
+            ],
+            "formatString": "0.00%;-0.00%;0.00%",
+            "displayFolder": "Segments"
+          },
+          {
+            "name": "Champions Count",
+            "expression": [
+              " ",
+              "CALCULATE(",
+              "    [Customer Count by Segment],",
+              "    Dim_Segment[Segment Code] = \"RF_Champions\"",
+              ")"
+            ],
+            "formatString": "#,0",
+            "displayFolder": "Segments"
+          },
+          {
+            "name": "Churned Segment Count",
+            "expression": [
+              " ",
+              "CALCULATE(",
+              "    [Customer Count by Segment],",
+              "    Dim_Segment[Segment Code] = \"RF_Churned\"",
+              ")"
+            ],
+            "formatString": "#,0",
+            "displayFolder": "Segments"
+          },
+          {
+            "name": "Segment Migration (Month)",
+            "expression": [
+              " ",
+              "VAR MaxDate = [_LastDataDateKey]",
+              "VAR PrevDate = [_PrevDataDateKey]",
+              "VAR ThisMonth =",
+              "    CALCULATETABLE(",
+              "        SELECTCOLUMNS(",
+              "            Fact_CustomerSnapshot, ",
+              "            \"CK\", Fact_CustomerSnapshot[Customer Key], ",
+              "            \"Seg\", Fact_CustomerSnapshot[SegmentKey]",
+              "        ),",
+              "        Dim_Date[DateKey] = MaxDate",
+              "    )",
+              "VAR PrevMonth =",
+              "    CALCULATETABLE(",
+              "        SELECTCOLUMNS(",
+              "            Fact_CustomerSnapshot, ",
+              "            \"CK\", Fact_CustomerSnapshot[Customer Key], ",
+              "            \"Seg\", Fact_CustomerSnapshot[SegmentKey]",
+              "        ),",
+              "        Dim_Date[DateKey] = PrevDate",
+              "    )",
+              "RETURN",
+              "    COUNTROWS(",
+              "        FILTER(",
+              "            NATURALINNERJOIN(ThisMonth, SELECTCOLUMNS(PrevMonth, \"CK\", [CK], \"PrevSeg\", [Seg])),",
+              "            [Seg] <> [PrevSeg]",
+              "        ))"
+            ],
+            "formatString": "#,0",
+            "displayFolder": "Segments"
+          },
+          {
+            "name": "Segment Migration (Quarter)",
+            "expression": [
+              " ",
+              "VAR MaxDateKey = [_LastDataDateKey]",
+              "VAR MaxDateValue = ",
+              "    CALCULATE(MAX(Dim_Date[Date]), Dim_Date[DateKey] = MaxDateKey)",
+              "VAR PrevQuarterDate = ",
+              "    EOMONTH(MaxDateValue, -3)",
+              "VAR PrevQuarterDateKey =",
+              "    CALCULATE(",
+              "        MAX(Dim_Date[DateKey]),",
+              "        REMOVEFILTERS(Dim_Date),",
+              "        Dim_Date[Date] = PrevQuarterDate",
+              "    )",
+              "VAR ThisMonth =",
+              "    CALCULATETABLE(",
+              "        SELECTCOLUMNS(Fact_CustomerSnapshot, \"CK\", Fact_CustomerSnapshot[Customer Key], \"Seg\", Fact_CustomerSnapshot[SegmentKey]),",
+              "        Dim_Date[DateKey] = MaxDateKey",
+              "    )",
+              "VAR PrevQuarter =",
+              "    CALCULATETABLE(",
+              "        SELECTCOLUMNS(Fact_CustomerSnapshot, \"CK\", Fact_CustomerSnapshot[Customer Key], \"Seg\", Fact_CustomerSnapshot[SegmentKey]),",
+              "        Dim_Date[DateKey] = PrevQuarterDateKey",
+              "    )",
+              "RETURN",
+              "    COUNTROWS(",
+              "        FILTER(",
+              "            NATURALINNERJOIN(ThisMonth, SELECTCOLUMNS(PrevQuarter, \"CK\", [CK], \"PrevSeg\", [Seg])),",
+              "            [Seg] <> [PrevSeg]",
+              "        )",
+              "    )"
+            ],
+            "formatString": "#,0",
+            "displayFolder": "Segments"
+          },
+          {
+            "name": "Segment Migration (Year)",
+            "expression": [
+              " ",
+              "VAR MaxDateKey = [_LastDataDateKey]",
+              "VAR MaxDateValue = ",
+              "    CALCULATE(MAX(Dim_Date[Date]), Dim_Date[DateKey] = MaxDateKey)",
+              "VAR PrevYearDate = ",
+              "    EOMONTH(MaxDateValue, -12)",
+              "VAR PrevYearDateKey =",
+              "    CALCULATE(",
+              "        MAX(Dim_Date[DateKey]),",
+              "        REMOVEFILTERS(Dim_Date),",
+              "        Dim_Date[Date] = PrevYearDate",
+              "    )",
+              "VAR ThisMonth =",
+              "    CALCULATETABLE(",
+              "        SELECTCOLUMNS(Fact_CustomerSnapshot, \"CK\", Fact_CustomerSnapshot[Customer Key], \"Seg\", Fact_CustomerSnapshot[SegmentKey]),",
+              "        Dim_Date[DateKey] = MaxDateKey",
+              "    )",
+              "VAR PrevYear =",
+              "    CALCULATETABLE(",
+              "        SELECTCOLUMNS(Fact_CustomerSnapshot, \"CK\", Fact_CustomerSnapshot[Customer Key], \"Seg\", Fact_CustomerSnapshot[SegmentKey]),",
+              "        Dim_Date[DateKey] = PrevYearDateKey",
+              "    )",
+              "RETURN",
+              "    COUNTROWS(",
+              "        FILTER(",
+              "            NATURALINNERJOIN(ThisMonth, SELECTCOLUMNS(PrevYear, \"CK\", [CK], \"PrevSeg\", [Seg])),",
+              "            [Seg] <> [PrevSeg]",
+              "        )",
+              "    )"
+            ],
+            "formatString": "#,0",
+            "displayFolder": "Segments"
+          },
+          {
+            "name": "Promoters",
+            "expression": [
+              " ",
+              "VAR MaxDate = [_LastDataDateKey]",
+              "RETURN",
+              "CALCULATE(",
+              "    COUNTROWS(Fact_CustomerSnapshot),",
+              "    Dim_Date[DateKey] = MaxDate,",
+              "    Fact_CustomerSnapshot[Satisfaction Score] >= 4",
+              ")"
+            ],
+            "formatString": "#,0",
+            "displayFolder": "NPS"
+          },
+          {
+            "name": "Detractors",
+            "expression": [
+              " ",
+              "VAR MaxDate = [_LastDataDateKey]",
+              "RETURN",
+              "CALCULATE(",
+              "    COUNTROWS(Fact_CustomerSnapshot),",
+              "    Dim_Date[DateKey] = MaxDate,",
+              "    Fact_CustomerSnapshot[Satisfaction Score] <= 2",
+              ")"
+            ],
+            "formatString": "#,0",
+            "displayFolder": "NPS"
+          },
+          {
+            "name": "NPS Score",
+            "expression": [
+              " ",
+              "DIVIDE([Promoters] - [Detractors], [Total Customers])"
+            ],
+            "formatString": "0.00%;-0.00%;0.00%",
+            "displayFolder": "NPS"
+          },
+          {
+            "name": "NPS Trend",
+            "expression": [
+              " ",
+              "VAR Promo = ",
+              "    CALCULATE(",
+              "        COUNTROWS(Fact_CustomerSnapshot), ",
+              "        Fact_CustomerSnapshot[Satisfaction Score] >= 4",
+              "    )",
+              "VAR Detract = ",
+              "    CALCULATE(",
+              "        COUNTROWS(Fact_CustomerSnapshot), ",
+              "        Fact_CustomerSnapshot[Satisfaction Score] <= 2",
+              "    )",
+              "VAR TotalActive = COUNTROWS(Fact_CustomerSnapshot)",
+              "RETURN",
+              "DIVIDE(Promo - Detract, TotalActive)"
+            ],
+            "formatString": "0.00%;-0.00%;0.00%",
+            "displayFolder": "NPS"
+          }
+        ]
+      }
+    ],
+    "relationships": [
+      {
+        "name": "1863d5da-4cc4-4f3c-9591-ba70cd399e80",
+        "fromTable": "Fact_CustomerSnapshot",
+        "fromColumn": "DateKey",
+        "toTable": "Dim_Date",
+        "toColumn": "DateKey"
+      },
+      {
+        "name": "85feccf1-1133-4310-a29d-1ada20c4918c",
+        "fromTable": "Fact_CustomerSnapshot",
+        "fromColumn": "SegmentKey",
+        "toTable": "Dim_Segment",
+        "toColumn": "SegmentKey"
+      },
+      {
+        "name": "cd67cb27-c7ce-4fdb-85ed-d3bf2d98c251",
+        "fromTable": "Fact_CustomerSnapshot",
+        "fromColumn": "Customer Key",
+        "toTable": "Dim_Customer",
+        "toColumn": "CustomerKey"
+      },
+      {
+        "name": "0072b5eb-5e35-42ed-8146-6e1514ec1a0f",
+        "fromTable": "Dim_Customer",
+        "fromColumn": "LocationKey",
+        "toTable": "Dim_Location",
+        "toColumn": "LocationKey"
+      }
+    ],
+    "annotations": [
+      {
+        "name": "ClientCompatibilityLevel",
+        "value": "700"
+      }
+    ]
+  },
+  "id": "SemanticModel"
+}
