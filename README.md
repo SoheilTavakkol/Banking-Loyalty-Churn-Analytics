@@ -43,7 +43,7 @@ Banking-Loyalty-Churn-Analytics/
 │   ├── 01-2-Create-BankingStaging.sql        ✅ Phase 5
 │   ├── 02-Create-Schema.sql                  ✅ Phase 2
 │   ├── 03-Create-Dim-Date.sql                ✅ Phase 2
-│   ├── 04-Populate-Dim-Date.sql               ✅ Phase 2
+│   ├── 04-Populate-Dim-Date.sql              ✅ Phase 2
 │   ├── 05-Create-Dim-Location.sql            ✅ Phase 2
 │   ├── 06-Create-Dim-Customer.sql            ✅ Phase 2
 │   ├── 07-Create-Dim-Segment.sql             ✅ Phase 2 (ranges corrected)
