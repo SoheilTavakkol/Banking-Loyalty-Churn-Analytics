@@ -87,15 +87,14 @@ Banking-Loyalty-Churn-Analytics/
 │   └── README.md
 │
 ├── 07-PowerBI-Dashboards/                    ✅ Phase 7 - COMPLETED
-│   ├── Executive-Dashboard.pbix
-│   ├── Marketing-Dashboard.pbix
-│   ├── CRM-Dashboard.pbix
+│   ├── Banking-Loyalty-Churn-Dashboards.pbix (3 pages: Executive, Marketing, CRM)
+│   ├── screenshots/
 │   └── README.md
 │
 └── README.md
 ```
 
-> **Note:** The originally planned Analyst Dashboard was descoped — three dashboards (Executive, Marketing, CRM & Retention) were judged sufficient to demonstrate the full range of dashboard design patterns (KPI cards, trend charts, distribution charts, funnels, and drill-down tables) for this portfolio. Phase 8 (Testing & Deployment) has no current implementation plan; the project is considered complete as of Phase 7.
+> **Note:** The originally planned Analyst Dashboard was descoped — three dashboards (Executive, Marketing, and CRM & Retention live as three pages inside a single .pbix file (shared navigation, slicers, and measure set) — not three separate files.) were judged sufficient to demonstrate the full range of dashboard design patterns (KPI cards, trend charts, distribution charts, funnels, and drill-down tables) for this portfolio. Phase 8 (Testing & Deployment) has no current implementation plan; the project is considered complete as of Phase 7.
 
 ---
 
@@ -349,7 +348,7 @@ Runtime: 00:10:02 for 13,051,115 rows.
 
 ### ✅ Phase 7: Power BI Dashboards (Completed)
 
-Three dashboards were built, each following the same three-level layout convention: **KPI Cards (Level 1) → Trend/Distribution Charts (Level 2) → Deeper Breakdowns (Level 3)**. All KPI cards use the Canvas KPI Card custom visual with sparklines. All three dashboards share a common left-hand navigation pane and Year/Month slicers.
+Three dashboards (Executive, Marketing, and CRM & Retention live as three pages inside a single .pbix file (shared navigation, slicers, and measure set) — not three separate files.) were built, each following the same three-level layout convention: **KPI Cards (Level 1) → Trend/Distribution Charts (Level 2) → Deeper Breakdowns (Level 3)**. All KPI cards use the Canvas KPI Card custom visual with sparklines. All three dashboards share a common left-hand navigation pane and Year/Month slicers.
 
 > **Descoped:** The originally planned Analyst Dashboard (segment-level drill-through, growth rate by segment) was not built. Three dashboards were judged sufficient to demonstrate the intended range of BI design patterns for this portfolio project.
 
