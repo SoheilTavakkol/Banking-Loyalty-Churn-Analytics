@@ -124,7 +124,7 @@ Banking-Loyalty-Churn-Analytics/
 
 - **RF Segmentation:** Champions, Loyal Customers, Potential Loyalists, New Customers, At Risk, Hibernating, Churned — ranges redesigned to be exhaustive and non-overlapping across the full Recency × Frequency space
 - **Churn Prediction:** Identify customers likely to leave (90+ days inactive)
-- **KPI Layer:** 39 DAX measures across 7 categories (Customer Metrics, Churn & Retention, Loyalty & Satisfaction, Transactions, Behavior & Growth, Segments, NPS)
+- **KPI Layer:** 45 DAX measures across 7 categories (Customer Metrics, Churn & Retention, Loyalty & Satisfaction, Transactions, Behavior & Growth, Segments, NPS)
 - **Trend Analysis:** MoM, QoQ, and YoY growth/decline patterns
 - **Customer Journey:** Track behavior and location changes with SCD Type 2
 - **Three Audience-Specific Dashboards:** Executive (C-level KPI overview), Marketing (acquisition/nurture/win-back funnel), CRM & Retention (churn, complaints, at-risk tracking)
@@ -324,11 +324,11 @@ Runtime: 00:10:02 for 13,051,115 rows.
 - ✅ All columns renamed with spaces for report-friendly display
 - ✅ 3 calculated columns (RecencyBucket, LoyaltyBand, GrowthCategory) + 2 on Dim_Date (MonthLabel, MonthSort)
 - ✅ Technical/audit/FK columns hidden across all 5 tables
-- ✅ 39 DAX measures across 7 Display Folders, all anchored to `_LastDataDateKey` (never to raw `Dim_Date` max, which extends to 2030)
+- ✅ 45 DAX measures across 7 Display Folders, all anchored to `_LastDataDateKey` (never to raw `Dim_Date` max, which extends to 2030)
 - ✅ Model deployed and verified — 7/7 objects succeeded, 13,051,115 fact rows transferred
 - ✅ KPI threshold/status logic deliberately deferred to Power BI (SSAS native KPI objects don't render their status visuals in Power BI — only Base Measure and Target are read)
 
-**DAX Measure Categories (39 total):**
+**DAX Measure Categories (45 total):**
 - Customer Metrics (7): Total/Active/New Customers, Active Rate, Growth MoM/QoQ/YoY
 - Churn & Retention (9): Churned/At-Risk Customers, Churn/Retention/At-Risk Rate, Churn Trend, MoM/QoQ/YoY Change
 - Loyalty & Satisfaction (7): Avg Loyalty/Satisfaction Score, Avg Recency Days, Loyalty Trend, MoM/QoQ/YoY Change
